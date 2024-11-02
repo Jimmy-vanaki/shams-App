@@ -48,20 +48,72 @@ class ReportingPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 200,
+            top: 245,
             child: USerReportingList(),
           ),
           Positioned(
             top: 60,
             child: Container(
               alignment: Alignment.center,
-              height: 160,
+              height: 200,
               width: Get.width - 40,
               padding: const EdgeInsets.all(20),
               decoration: Constants.shamsBoxDecoration(context),
               child: Column(
                 children: [
                   ReportingDate(),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButton(
+                          items: [
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 0,
+                            ),
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 1,
+                            ),
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 2,
+                            ),
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 3,
+                            ),
+                          ],
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      const Gap(10),
+                      Expanded(
+                        child: DropdownButton(
+                          items: [
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 0,
+                            ),
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 1,
+                            ),
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 2,
+                            ),
+                            DropdownMenuItem(
+                              child: Text('data'),
+                              value: 3,
+                            ),
+                          ],
+                          onChanged: (value) {},
+                        ),
+                      ),
+                    ],
+                  ),
                   const Gap(10),
                   ElevatedButton(
                     onPressed: () {},

@@ -87,6 +87,7 @@ class HomePage extends StatelessWidget {
                     showModalBottomSheet(
                       isScrollControlled: true,
                       showDragHandle: true,
+                      
                       backgroundColor: Theme.of(context).colorScheme.onPrimary,
                       context: context,
                       builder: (context) {
