@@ -20,8 +20,6 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context) {
-    PurchaseMethodsController purchaseMethodsController =
-        Get.put(PurchaseMethodsController());
     Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -87,7 +85,6 @@ class HomePage extends StatelessWidget {
                     showModalBottomSheet(
                       isScrollControlled: true,
                       showDragHandle: true,
-                      
                       backgroundColor: Theme.of(context).colorScheme.onPrimary,
                       context: context,
                       builder: (context) {
@@ -238,7 +235,7 @@ class HomePage extends StatelessWidget {
                               const Gap(10),
                               const PurchaseMethodsItem(
                                 scale: 50,
-                                tag: '0',
+                                tag: 'single',
                               ),
                               const Gap(20),
                               ElevatedButton(

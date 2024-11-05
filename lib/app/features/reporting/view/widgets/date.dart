@@ -2,7 +2,6 @@ import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 
 class ReportingDate extends StatelessWidget {
@@ -24,10 +23,17 @@ class ReportingDate extends StatelessWidget {
             BlendMode.srcIn,
           ),
         ),
-        const Gap(10),
+        const Gap(5),
         Container(
-          padding: const EdgeInsets.all(5),
-          decoration: Constants.shamsBoxDecoration(context),
+          padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+          decoration: Constants.shamsBoxDecoration(context).copyWith(
+            border: Border(
+              right: BorderSide(
+                color: Theme.of(context).colorScheme.primary.withAlpha(50),
+                width: 8,
+              ),
+            ),
+          ),
           child: InkWell(
             child: Row(
               children: [
@@ -65,13 +71,20 @@ class ReportingDate extends StatelessWidget {
             },
           ),
         ),
-        const Gap(10),
+        const Gap(5),
         const Text('الی'),
-        const Gap(10),
+        const Gap(5),
         Container(
-          padding: const EdgeInsets.all(5),
-          decoration: Constants.shamsBoxDecoration(context)
-              .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+          padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+          decoration: Constants.shamsBoxDecoration(context).copyWith(
+            color: Theme.of(context).colorScheme.onPrimary,
+            border: Border(
+              right: BorderSide(
+                color: Theme.of(context).colorScheme.primary.withAlpha(50),
+                width: 8,
+              ),
+            ),
+          ),
           child: InkWell(
             child: Row(
               children: [

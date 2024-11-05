@@ -7,7 +7,7 @@ import 'package:shams/app/features/page_view/view/getX/navigation_controller.dar
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:shams/app/features/page_view/view/getX/scaffold_controller.dart';
 import 'package:shams/app/features/page_view/view/widgets/custom_appbar.dart';
-import 'package:shams/app/features/page_view/view/widgets/custom_drawer.dart';
+import 'package:shams/app/core/common/widgets/custom_drawer.dart';
 import 'package:shams/app/features/notif/view/screens/notification_archive.dart';
 import 'package:shams/app/features/reporting/view/screens/reporting_page.dart';
 import 'package:shams/app/features/setting/view/screens/setting_page.dart';
@@ -21,9 +21,6 @@ class MainPageView extends GetView<ScaffoldController> {
     //navigation controller
     final BottmNavigationController navigationController =
         Get.put(BottmNavigationController(), permanent: true);
-
-    // GlobalKey<SliderDrawerState> sliderDrawerKey =
-    //     GlobalKey<SliderDrawerState>();
 
     return Scaffold(
       body: SliderDrawer(
@@ -40,7 +37,7 @@ class MainPageView extends GetView<ScaffoldController> {
         child: Container(
           width: Get.width,
           height: Get.height,
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.onPrimary,
           child: Stack(
             alignment: Alignment.center,
             children: [

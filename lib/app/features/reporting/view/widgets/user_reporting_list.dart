@@ -76,7 +76,7 @@ class USerReportingList extends StatelessWidget {
                                   .purchaseMethodsSelected.value !=
                               -1)
                           ? ElevatedButton(
-                              onPressed: () {}, child: Text('data'))
+                              onPressed: () {}, child: Text('تأكيد'))
                           : const SizedBox();
                     },
                   )

@@ -35,7 +35,7 @@ class MyThemes {
     fontFamily: 'dijlah',
     useMaterial3: true,
     dividerTheme:
-        const DividerThemeData(color: Color.fromARGB(50, 150, 120, 50)),
+        const DividerThemeData(color: Color.fromARGB(20, 150, 120, 50)),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,

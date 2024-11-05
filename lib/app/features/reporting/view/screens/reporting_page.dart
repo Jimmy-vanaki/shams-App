@@ -3,114 +3,54 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
+import 'package:shams/app/features/reporting/view/widgets/category_dropdown.dart';
 import 'package:shams/app/features/reporting/view/widgets/date.dart';
 import 'package:shams/app/features/reporting/view/widgets/user_reporting_list.dart';
 
 class ReportingPage extends StatelessWidget {
   const ReportingPage({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      transform: Matrix4.translationValues(0, -1, 0),
       width: Get.width,
       height: Get.height,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned(
-            top: 0,
-            child: Container(
-              height: 200,
-              width: Get.width,
-              padding: const EdgeInsets.all(20),
-              color: Theme.of(context).colorScheme.primary,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(
-                    'assets/svgs/checklist-task-budget.svg',
-                    colorFilter: ColorFilter.mode(
-                      Theme.of(context).colorScheme.onPrimary,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  const Gap(10),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      'التقارير',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 245,
-            child: USerReportingList(),
-          ),
-          Positioned(
-            top: 60,
-            child: Container(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Gap(10),
+            Container(
               alignment: Alignment.center,
-              height: 200,
+              height: 220,
               width: Get.width - 40,
               padding: const EdgeInsets.all(20),
               decoration: Constants.shamsBoxDecoration(context),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ReportingDate(),
-                  const Gap(10),
-                  Row(
+                  const Gap(20),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: DropdownButton(
-                          items: [
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 0,
-                            ),
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 1,
-                            ),
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 2,
-                            ),
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 3,
-                            ),
-                          ],
-                          onChanged: (value) {},
-                        ),
+                      CategoryDropdown(
+                        itemList: [
+                          DropdownMenuEntry(value: 'الکل', label: 'الکل'),
+                          DropdownMenuEntry(
+                              value: 'mohammad', label: 'mohammad'),
+                          DropdownMenuEntry(value: 'ali', label: 'ali'),
+                          DropdownMenuEntry(value: 'mohsen', label: 'mohsen'),
+                          DropdownMenuEntry(value: 'abol', label: 'abol'),
+                        ],
                       ),
-                      const Gap(10),
-                      Expanded(
-                        child: DropdownButton(
-                          items: [
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 0,
-                            ),
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 1,
-                            ),
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 2,
-                            ),
-                            DropdownMenuItem(
-                              child: Text('data'),
-                              value: 3,
-                            ),
-                          ],
-                          onChanged: (value) {},
-                        ),
+                      Gap(10),
+                      CategoryDropdown(
+                        itemList: [
+                          DropdownMenuEntry(value: '1000', label: '1000'),
+                          DropdownMenuEntry(value: '2000', label: '2000'),
+                          DropdownMenuEntry(value: '3000', label: '3000'),
+                          DropdownMenuEntry(value: '4000', label: '4000'),
+                        ],
                       ),
                     ],
                   ),
@@ -140,8 +80,9 @@ class ReportingPage extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+            const USerReportingList(),
+          ],
+        ),
       ),
     );
   }

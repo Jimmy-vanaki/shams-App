@@ -1,7 +1,10 @@
 import 'package:auto_height_grid_view/auto_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:shams/app/config/connectivity_controller.dart';
 import 'package:shams/app/config/constants.dart';
+import 'package:shams/app/core/routes/routes.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class OtherServices extends StatelessWidget {
@@ -13,14 +16,23 @@ class OtherServices extends StatelessWidget {
       {
         "title": 'TopUp',
         "icon": 'point-of-sale-bill',
+        "onTap": () {
+          Get.toNamed(RoutesClass.invoicePage);
+        },
       },
       {
         "title": 'فاتورة',
         "icon": 'digital-payment',
+        "onTap": () {
+          Get.toNamed(RoutesClass.invoicePage);
+        },
       },
       {
         "title": 'باقات',
         "icon": 'box-open',
+        "onTap": () {
+          Get.toNamed(RoutesClass.invoicePage);
+        },
       },
     ];
     return AutoHeightGridView(
@@ -33,10 +45,11 @@ class OtherServices extends StatelessWidget {
       shrinkWrap: true,
       builder: (context, index) {
         return ZoomTapAnimation(
-          onTap: () {},
+          onTap: otherServicesList[index]['onTap'],
           child: Container(
             padding: const EdgeInsets.all(10),
-            decoration:Constants.shamsBoxDecoration(context).copyWith(color: Theme.of(context).colorScheme.primary),
+            decoration: Constants.shamsBoxDecoration(context)
+                .copyWith(color: Theme.of(context).colorScheme.primary),
             height: 100,
             child: Column(
               children: [

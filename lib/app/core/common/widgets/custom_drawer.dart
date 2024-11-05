@@ -29,7 +29,11 @@ class CustomDrawer extends StatelessWidget {
       {
         "title": 'الملف الشخصي',
         "icon": 'user',
-        "onTap": () {},
+        "onTap": () {
+          Get.toNamed(
+            RoutesClass.getProfilePage(),
+          );
+        },
       },
       {
         "title": 'الاشعارات',
@@ -121,6 +125,9 @@ class CustomDrawer extends StatelessWidget {
       },
     ];
     return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.zero),
+      ),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
