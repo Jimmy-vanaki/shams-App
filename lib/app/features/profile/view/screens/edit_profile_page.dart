@@ -23,7 +23,6 @@ class EditProfilePage extends StatelessWidget {
           style: BorderStyle.none,
         ),
       ),
-      // hintText: 'اسم',
     );
     return InternalPage(
       customWidget: Stack(
@@ -31,7 +30,7 @@ class EditProfilePage extends StatelessWidget {
         children: [
           SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.only(top: 240),
+              margin: const EdgeInsets.only(top: 240),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 40),

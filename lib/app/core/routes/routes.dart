@@ -38,7 +38,7 @@ class RoutesClass {
     GetPage(name: welcomePage, page: () => const WelcomePage()),
     GetPage(name: profilePage, page: () => const ProfilePage()),
     GetPage(name: editProfilePage, page: () => const EditProfilePage()),
-    GetPage(name: invoicePage, page: () => const InvoicePage()),
+    GetPage(name: invoicePage, page: () =>  const InvoicePage()),
     GetPage(
         name: textContent,
         page: () {
