@@ -6,6 +6,9 @@ class NotificationArchive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InternalPage(customWidget: Text('mohammad'));
+    return InternalPage(
+      title: 'الاشعارات',
+      customWidget: Text('mohammad'),
+    );
   }
 }

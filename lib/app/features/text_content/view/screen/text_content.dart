@@ -16,6 +16,7 @@ class TextContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InternalPage(
+      title: title,
       customWidget: Container(
         margin: EdgeInsets.all(20),
         decoration: Constants.shamsBoxDecoration(context),

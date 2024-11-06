@@ -31,7 +31,7 @@ class OtherServices extends StatelessWidget {
         "title": 'باقات',
         "icon": 'box-open',
         "onTap": () {
-          Get.toNamed(RoutesClass.invoicePage);
+          Get.toNamed(RoutesClass.internetPackagesPage);
         },
       },
     ];

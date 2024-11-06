@@ -6,8 +6,10 @@ class InternalPage extends StatelessWidget {
   const InternalPage({
     super.key,
     required this.customWidget,
+    required this.title,
   });
   final Widget customWidget;
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,16 +17,35 @@ class InternalPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 0,
         titleSpacing: 0,
-        leading: IconButton(
-          onPressed: () {
-            print('object');
-            Get.back();
-          },
-          icon: SvgPicture.asset(
-            'assets/svgs/angle-right.svg',
-            colorFilter: ColorFilter.mode(
-              Theme.of(context).colorScheme.onPrimary,
-              BlendMode.srcIn,
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: IconButton(
+            onPressed: () {
+              print('object');
+              Get.back();
+            },
+            icon: SvgPicture.asset(
+              'assets/svgs/angle-left.svg',
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.onPrimary,
+                BlendMode.srcIn,
+              ),
+              width: 20,
+              height: 20,
+            ),
+          ),
+        ),
+        leading: const SizedBox(),
+        flexibleSpace: Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 20, top: 25),
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontSize: 17,
+              ),
             ),
           ),
         ),

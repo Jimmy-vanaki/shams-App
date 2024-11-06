@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/common/widgets/internal_page.dart';
 import 'package:shams/app/features/services/view/getX/invoice_controller.dart';
@@ -42,6 +41,7 @@ class InvoicePage extends StatelessWidget {
     ];
 
     return InternalPage(
+      title: 'فاتورة',
       customWidget: SingleChildScrollView(
         child: Container(
           height: 650,
@@ -60,20 +60,29 @@ class InvoicePage extends StatelessWidget {
                 ),
               ),
               const Gap(5),
-              const Text('يرجى تحديد أو اختيار المبلغ المطلوب'),
+              const Text(
+                'يرجى ادخال رقم الهاتف وتحديد أو اختيار المبلغ المطلوب',
+                style: TextStyle(fontSize: 11),
+                textAlign: TextAlign.center,
+              ),
               const Gap(60),
               TextFormField(
                 textInputAction: TextInputAction.next,
+                textDirection: TextDirection.ltr,
                 validator: (value) {
                   if (value!.length < 12) {
                     return null;
                   }
                   return 'رقم الجوال غير صالح';
                 },
-                initialValue: '09107722188',
+                initialValue: ' ',
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: const InputDecoration(
-                  suffixText: '025',
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  suffixText: '00964',
+                  suffixStyle: TextStyle(
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(200)),
                   border: OutlineInputBorder(),
                   label: Text(
                     'رقم الهاتف',
@@ -118,8 +127,7 @@ class InvoicePage extends StatelessWidget {
                               shortcutList[index]['price'],
                               style: TextStyle(
                                 fontSize: 12,
-                                color: invoiceController.selected.value ==
-                                        index
+                                color: invoiceController.selected.value == index
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(context)
                                         .colorScheme
@@ -131,8 +139,7 @@ class InvoicePage extends StatelessWidget {
                               'IQD',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: invoiceController.selected.value ==
-                                        index
+                                color: invoiceController.selected.value == index
                                     ? Theme.of(context).colorScheme.primary
                                     : Theme.of(context)
                                         .colorScheme
@@ -161,7 +168,7 @@ class InvoicePage extends StatelessWidget {
                       if (invoiceController.selected.value > 0) {
                         invoiceController.selected.value--;
                         invoiceController
-                            .goToItem(invoiceController.selected.value);
+                            .animatedToItem(invoiceController.selected.value);
                       }
                     },
                     child: Container(
@@ -175,6 +182,8 @@ class InvoicePage extends StatelessWidget {
                             Theme.of(context).colorScheme.primary,
                             BlendMode.srcIn,
                           ),
+                          width: 18,
+                          height: 18,
                         ),
                       ),
                     ),
@@ -190,8 +199,8 @@ class InvoicePage extends StatelessWidget {
                           child: RotatedBox(
                             quarterTurns: 1,
                             child: ListWheelScrollView.useDelegate(
-                              controller: invoiceController
-                                  .fixedExtentScrollController,
+                              controller:
+                                  invoiceController.fixedExtentScrollController,
                               physics: const FixedExtentScrollPhysics(),
                               itemExtent: 90,
                               diameterRatio: 2.0,
@@ -211,8 +220,13 @@ class InvoicePage extends StatelessWidget {
                                           color: index ==
                                                   invoiceController
                                                       .selected.value
-                                              ? Colors.amberAccent
-                                              : Colors.grey[200],
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withAlpha(70),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
@@ -232,8 +246,13 @@ class InvoicePage extends StatelessWidget {
                                             color: index ==
                                                     invoiceController
                                                         .selected.value
-                                                ? Colors.black
-                                                : Colors.grey,
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary
+                                                    .withAlpha(200),
                                           ),
                                         ),
                                       ),
@@ -255,7 +274,7 @@ class InvoicePage extends StatelessWidget {
                           shortcutList.length - 1) {
                         invoiceController.selected.value++;
                         invoiceController
-                            .goToItem(invoiceController.selected.value);
+                            .animatedToItem(invoiceController.selected.value);
                       }
                     },
                     child: Container(
@@ -269,6 +288,8 @@ class InvoicePage extends StatelessWidget {
                             Theme.of(context).colorScheme.primary,
                             BlendMode.srcIn,
                           ),
+                          width: 18,
+                          height: 18,
                         ),
                       ),
                     ),

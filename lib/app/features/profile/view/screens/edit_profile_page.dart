@@ -25,6 +25,7 @@ class EditProfilePage extends StatelessWidget {
       ),
     );
     return InternalPage(
+      title: 'تعديل الملف الشخصي',
       customWidget: Stack(
         alignment: Alignment.center,
         children: [

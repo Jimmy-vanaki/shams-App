@@ -16,6 +16,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InternalPage(
+      title: 'الملف الشخصي',
       customWidget: Stack(
         alignment: Alignment.center,
         children: [

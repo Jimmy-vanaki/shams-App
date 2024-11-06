@@ -25,4 +25,13 @@ class InvoiceController extends GetxController {
       index,
     );
   }
+
+  animatedToItem(int index) {
+    selected.value = index;
+    fixedExtentScrollController.animateToItem(
+      index,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeIn,
+    );
+  }
 }
