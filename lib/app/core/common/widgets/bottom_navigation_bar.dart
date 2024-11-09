@@ -47,7 +47,7 @@ class CostumBottomNavigationBar extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: navigationController.currentPage.value == page
-                  ? Theme.of(context).primaryColor
+                  ? Theme.of(context).colorScheme.primary
                   : Colors.transparent,
             ),
             child: Center(
@@ -55,7 +55,7 @@ class CostumBottomNavigationBar extends StatelessWidget {
                 'assets/svgs/$icon.svg',
                 colorFilter: ColorFilter.mode(
                   navigationController.currentPage.value == page
-                      ? Colors.white
+                      ? Theme.of(context).colorScheme.onPrimary
                       : Colors.black,
                   BlendMode.srcIn,
                 ),

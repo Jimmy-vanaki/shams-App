@@ -104,6 +104,7 @@ class InvoicePage extends StatelessWidget {
                     child: Obx(
                       () => Container(
                         padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.symmetric(vertical: 2),
                         decoration:
                             Constants.shamsBoxDecoration(context).copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,

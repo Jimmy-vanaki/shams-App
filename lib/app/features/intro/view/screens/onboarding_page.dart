@@ -68,23 +68,14 @@ class IntroPage extends StatelessWidget {
                             .withAlpha(100),
                       ),
                     )
-                  : ZoomTapAnimation(
-                      onTap: () {
-                        Get.offAllNamed(RoutesClass.welcomePage);
-                      },
-                      child: Container(
-                        height: 55,
-                        width: Get.width * 0.8,
-                        alignment: Alignment.center,
-                        decoration: Constants.shamsBoxDecoration(context)
-                            .copyWith(
-                                color: Theme.of(context).colorScheme.primary),
-                        child: Text(
-                          'ابدأ',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
-                        ),
+                  : Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 40),
+                      width: (double.infinity),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.offAllNamed(RoutesClass.welcomePage);
+                        },
+                        child: Text('ابدأ'),
                       ),
                     ),
             ),

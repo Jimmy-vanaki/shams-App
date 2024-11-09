@@ -21,11 +21,15 @@ class SplashPage extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Image.asset(
-              width: size.width,
-              height: size.height,
-              'assets/images/splash-bg.jpg',
-              fit: BoxFit.fill,
+            ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.primary, BlendMode.color),
+              child: Image.asset(
+                width: size.width,
+                height: size.height,
+                'assets/images/splash-bg.jpg',
+                fit: BoxFit.fill,
+              ),
             ),
             Image.asset(
               'assets/images/splash-cn.png',
