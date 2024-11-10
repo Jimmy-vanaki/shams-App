@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/common/widgets/internal_page.dart';
 import 'package:shams/app/features/services/view/getX/invoice_controller.dart';
+import 'package:shams/app/features/services/view/widgets/invoice_modal_confirm.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class InvoicePage extends StatelessWidget {
@@ -306,7 +307,9 @@ class InvoicePage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    invoiceModalConfirm(context);
+                  },
                   child: const Text('التالي'),
                 ),
               )

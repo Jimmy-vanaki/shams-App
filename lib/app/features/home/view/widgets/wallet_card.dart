@@ -60,7 +60,7 @@ class WalletCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  '      رصیدک',
+                  '      رصيدك',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
                     fontSize: 15,

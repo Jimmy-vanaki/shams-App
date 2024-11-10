@@ -1,18 +1,21 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:shams/app/core/common/widgets/appbar.dart';
 import 'package:shams/app/core/common/widgets/internal_page.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/profile/view/getX/edit_profile_page_controller.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ImageController imageController = Get.put(ImageController());
     final InputDecoration inputdecoration = InputDecoration(
       fillColor: Theme.of(context).colorScheme.primary.withAlpha(50),
       filled: true,
@@ -134,21 +137,28 @@ class EditProfilePage extends StatelessWidget {
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(80.0),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 160,
-                      width: 160,
-                      imageUrl:
-                          "https://images.unsplash.com/photo-1728943492981-be3e94e4d551?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%)3D",
-                      placeholder: (context, url) => const CustomLoading(),
-                      errorWidget: (context, url, error) => Image.asset(
-                        'assets/images/not.jpg',
-                        fit: BoxFit.fill,
-                        height: 160,
-                        width: 160,
-                      ),
+                  child: Obx(
+                    () => ClipRRect(
+                      borderRadius: BorderRadius.circular(80.0),
+                      child: imageController.pickedImageFile.value != null
+                          ? Image.file(
+                              imageController.pickedImageFile.value!,
+                              width: 160,
+                              height: 160,
+                              fit: BoxFit.cover,
+                            )
+                          : CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl: imageController.networkImageUrl.value,
+                              placeholder: (context, url) =>
+                                  const CustomLoading(),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'assets/images/not.jpg',
+                                fit: BoxFit.fill,
+                                height: 160,
+                                width: 160,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -168,7 +178,7 @@ class EditProfilePage extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               child: ZoomTapAnimation(
-                onTap: () {},
+                onTap: () => imageController.pickImage(),
                 child: SvgPicture.asset(
                   'assets/svgs/folder-camera.svg',
                   colorFilter: ColorFilter.mode(

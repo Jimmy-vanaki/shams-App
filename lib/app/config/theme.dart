@@ -27,6 +27,12 @@ class MyThemes {
       error: Color.fromARGB(255, 249, 52, 62),
       onError: Color(0xffffb4ab),
     ),
+    extensions: const <ThemeExtension<dynamic>>[
+      SuccessColorTheme(
+        successColor: Colors.lightGreen,
+        onSuccessColor: Colors.white,
+      ),
+    ],
   );
 
   static final ThemeData lightTheme = ThemeData(

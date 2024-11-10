@@ -80,6 +80,7 @@ class ReportingPage extends StatelessWidget {
                 ],
               ),
             ),
+            const Gap(10),
             const USerReportingList(),
           ],
         ),

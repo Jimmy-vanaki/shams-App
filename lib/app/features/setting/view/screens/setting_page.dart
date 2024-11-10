@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:shams/app/core/common/constants/share_app.dart';
 import 'package:shams/app/features/setting/view/getX/setting_controller.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -42,7 +44,7 @@ class SettingPage extends StatelessWidget {
                   ),
                 ),
                 Transform.scale(
-                  scale: 0.8,
+                  scale: 0.7,
                   child: Switch(
                     value: settingController.darkMode.value,
                     onChanged: (value) {
@@ -79,7 +81,7 @@ class SettingPage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.only(top: 6),
                   child: Text(
-                    'print',
+                    'الطباعة',
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -89,31 +91,26 @@ class SettingPage extends StatelessWidget {
             ],
           ),
           const Gap(10),
-          // Row(
-          //   children: [
-          //     const Text(
-          //       'اضافة رمز الاستجابة السريع (qr code) الى فاتورة الطباعة',
-          //       style: TextStyle(
-          //         fontSize: 11,
-          //       ),
-          //     ),
-          //     Obx(
-          //       () => Checkbox(
-          //         value: settingController.printQrcode.value,
-          //         onChanged: (value) {
-          //           settingController.activePrintQrCode(value!);
-          //         },
-          //       ),
-          //     ),
-          //   ],
-          // ),
           Obx(() => CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text(
-                  'اضافة رمز الاستجابة السريع (qr code) الى فاتورة الطباعة',
-                  style: TextStyle(
-                    fontSize: 11,
-                  ),
+                title: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svgs/bullet.svg',
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary,
+                        BlendMode.srcIn,
+                      ),
+                      width: 18,
+                      height: 18,
+                    ),
+                    const Text(
+                      'اضافة رمز الاستجابة السريع (qr code)',
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
                 ),
                 value: settingController.printQrcode.value,
                 onChanged: (newValue) {
@@ -122,35 +119,61 @@ class SettingPage extends StatelessWidget {
               )),
           Obx(() => CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text(
-                  'طباعة صورة الكارت',
-                  style: TextStyle(
-                    fontSize: 11,
-                  ),
+                title: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svgs/bullet.svg',
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary,
+                        BlendMode.srcIn,
+                      ),
+                      width: 18,
+                      height: 18,
+                    ),
+                    const Text(
+                      'طباعة صورة الكارت',
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
                 ),
-                value: settingController.printQrcode.value,
+                value: settingController.printCardImage.value,
                 onChanged: (newValue) {
-                  settingController.activePrintQrCode(newValue!);
+                  settingController.activePrintCardImage(newValue!);
                 },
               )),
           Obx(() => CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text(
-                  'طباعة معلومات الكارت',
-                  style: TextStyle(
-                    fontSize: 11,
-                  ),
+                title: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svgs/bullet.svg',
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary,
+                        BlendMode.srcIn,
+                      ),
+                      width: 18,
+                      height: 18,
+                    ),
+                    const Text(
+                      'طباعة معلومات واعلانات اسفل الفاتورة',
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
                 ),
-                value: settingController.printQrcode.value,
+                value: settingController.printInformation.value,
                 onChanged: (newValue) {
-                  settingController.activePrintQrCode(newValue!);
+                  settingController.activePrintInformation(newValue!);
                 },
               )),
           const Gap(10),
           const Divider(),
           const Gap(10),
-          InkWell(
-            onTap: () {},
+          ZoomTapAnimation(
+            onTap: () => shareApp(context),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,

@@ -50,8 +50,9 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   delayed_widget: ^1.1.2
   auto_height_grid_view: ^1.0.0
-  numberpicker: ^2.1.2
   board_datetime_picker: ^2.1.4
+  share_plus: ^10.1.2
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

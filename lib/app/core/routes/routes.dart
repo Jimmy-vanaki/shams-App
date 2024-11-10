@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:shams/app/features/home/view/screens/companies_archive_page.dart';
+import 'package:shams/app/features/home/view/screens/product_archive_page.dart';
 import 'package:shams/app/features/login/view/screens/welcome_page.dart';
 import 'package:shams/app/features/page_view/view/screens/main_page_view.dart';
 import 'package:shams/app/features/intro/view/screens/onboarding_page.dart';
@@ -21,6 +23,8 @@ class RoutesClass {
   static String editProfilePage = '/editProfilePage';
   static String invoicePage = '/invoicePage';
   static String internetPackagesPage = '/internetPackagesPage';
+  static String productArchivePage = '/productArchivePage';
+  static String companiesArchivePage = '/companiesArchivePage';
 
   static String getHomeRoute() => home;
   static String getSplshRoute() => splash;
@@ -32,6 +36,8 @@ class RoutesClass {
   static String getEditProfilePage() => editProfilePage;
   static String getInvoicePage() => invoicePage;
   static String getInternetPackagesPage() => internetPackagesPage;
+  static String getProductArchivePage() => productArchivePage;
+  static String getCompaniesArchivePage() => companiesArchivePage;
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => const MainPageView()),
@@ -40,8 +46,10 @@ class RoutesClass {
     GetPage(name: notifArchive, page: () => const NotificationArchive()),
     GetPage(name: welcomePage, page: () => const WelcomePage()),
     GetPage(name: profilePage, page: () => const ProfilePage()),
-    GetPage(name: editProfilePage, page: () => const EditProfilePage()),
+    GetPage(name: editProfilePage, page: () =>  EditProfilePage()),
     GetPage(name: invoicePage, page: () => const InvoicePage()),
+    GetPage(name: productArchivePage, page: () => const ProductArchivePage()),
+    GetPage(name: companiesArchivePage, page: () => const CompaniesArchivePage()),
     GetPage(
         name: internetPackagesPage, page: () => const InternetPackagesPage()),
     GetPage(

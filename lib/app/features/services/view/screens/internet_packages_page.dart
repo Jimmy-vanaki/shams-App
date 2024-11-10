@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/common/widgets/internal_page.dart';
-import 'package:shams/app/core/extensions/success_color_theme.dart';
+import 'package:shams/app/features/services/view/widgets/internet_modal_confirm.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class InternetPackagesPage extends StatelessWidget {
@@ -68,6 +67,9 @@ class InternetPackagesPage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return ZoomTapAnimation(
+                            onTap: () {
+                              internetModalConfirm(context);
+                            },
                             child: Container(
                               width: 150,
                               margin:
@@ -89,13 +91,18 @@ class InternetPackagesPage extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
                                     'Monthly 50GB',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                   Text(
                                     '19,500 IQD',
+                                    style: TextStyle(fontSize: 13),
                                   ),
                                 ],
                               ),
@@ -127,105 +134,7 @@ class InternetPackagesPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ZoomTapAnimation(
                       onTap: () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          showDragHandle: true,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                          context: context,
-                          builder: (context) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom),
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                width: double.infinity,
-                                alignment: Alignment.topCenter,
-                                height: Get.height * .4,
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      textDirection: TextDirection.ltr,
-                                      validator: (value) {
-                                        if (value!.length < 12) {
-                                          return null;
-                                        }
-                                        return 'رقم الجوال غير صالح';
-                                      },
-                                      initialValue: ' ',
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                        suffixText: '00964',
-                                        suffixStyle: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary
-                                                .withAlpha(200)),
-                                        border: OutlineInputBorder(),
-                                        label: Text(
-                                          'رقم الهاتف',
-                                        ),
-                                      ),
-                                    ),
-                                    const Gap(20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('شرکت :'),
-                                        Text('MAX Cards'),
-                                      ],
-                                    ),
-                                    const Gap(20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('مبلغ :'),
-                                        Text('20,000 IQD'),
-                                      ],
-                                    ),
-                                    const Gap(20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('زمان :'),
-                                        Text('Monthly'),
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                WidgetStatePropertyAll(
-                                                    Theme.of(context)
-                                                        .extension<
-                                                            SuccessColorTheme>()
-                                                        ?.successColor),
-                                          ),
-                                          onPressed: () {},
-                                          child: Text(
-                                            'تاکید',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .extension<
-                                                      SuccessColorTheme>()
-                                                  ?.onSuccessColor,
-                                            ),
-                                          )),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
+                        internetModalConfirm(context);
                       },
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 10),

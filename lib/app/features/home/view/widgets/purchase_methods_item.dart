@@ -55,7 +55,7 @@ class PurchaseMethodsItem extends StatelessWidget {
           itemBuilder: (context, index) {
             return ZoomTapAnimation(
               onTap: () {
-                purchaseMethodsController.selected(index: index);
+                purchaseMethodsController.selectMethod(index: index);
               },
               child: Tooltip(
                 message: purchaseMethodsList[index]['message'],
