@@ -3,10 +3,10 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/core/routes/routes.dart';
+import 'package:shams/app/features/page_view/view/getX/scaffold_controller.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-AppBar customAppBar(
-    BuildContext context, GlobalKey<SliderDrawerState> sliderDrawerKey) {
+AppBar customAppBar(BuildContext context , ScaffoldController controller) {
   return AppBar(
     elevation: 0,
     backgroundColor: Theme.of(context).colorScheme.primary,
@@ -19,10 +19,10 @@ AppBar customAppBar(
         ),
       ),
       onPressed: () {
-        if (sliderDrawerKey.currentState!.isDrawerOpen) {
-          sliderDrawerKey.currentState!.closeSlider();
+        if (controller.drawerOpen.value) {
+          controller.closeDrawer();
         } else {
-          sliderDrawerKey.currentState!.openSlider();
+          controller.openDrawer();
         }
       },
       tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,

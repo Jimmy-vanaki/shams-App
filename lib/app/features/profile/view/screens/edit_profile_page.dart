@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,7 +7,6 @@ import 'package:shams/app/core/common/widgets/internal_page.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
 import 'package:shams/app/features/profile/view/getX/edit_profile_page_controller.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});

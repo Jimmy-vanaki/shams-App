@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/theme.dart';
 import 'package:shams/app/core/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,6 +16,8 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    bool darkMode =
+        Constants.localStorage.read('settings')['darkMode'] ?? false;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('ar'),
       title: 'Flutter Demo',
-      themeMode: ThemeMode.light,
+      themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
       // dark
       darkTheme: MyThemes.darkTheme,
       // light

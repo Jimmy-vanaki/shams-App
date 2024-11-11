@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/routes/routes.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
 
@@ -10,10 +11,14 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    bool hasSeenOnboarding =
+        Constants.localStorage.read('hasSeenOnboarding') ?? false;
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        Get.offAllNamed(RoutesClass.intro);
+        hasSeenOnboarding
+            ? Get.offAllNamed(RoutesClass.home)
+            : Get.offAllNamed(RoutesClass.intro);
       },
     );
     return Scaffold(

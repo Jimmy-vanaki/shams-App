@@ -12,6 +12,7 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SettingController settingController = Get.put(SettingController());
+    // bool darkMode = (settingController.settings["darkMode"] ?? false);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -23,7 +24,7 @@ class SettingPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SvgPicture.asset(
-                  'assets/svgs/${settingController.darkMode.value ? 'moon' : 'brightness'}.svg',
+                  'assets/svgs/${(settingController.settings["darkMode"] ?? false) ? 'moon' : 'brightness'}.svg',
                   colorFilter: ColorFilter.mode(
                     Theme.of(context).colorScheme.primary,
                     BlendMode.srcIn,
@@ -36,7 +37,7 @@ class SettingPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
-                      settingController.darkMode.value ? 'داکن' : 'فاتح',
+                      (settingController.settings["darkMode"] ?? false) ? 'داکن' : 'فاتح',
                       style: const TextStyle(
                         fontSize: 16,
                       ),
@@ -46,11 +47,11 @@ class SettingPage extends StatelessWidget {
                 Transform.scale(
                   scale: 0.7,
                   child: Switch(
-                    value: settingController.darkMode.value,
+                    value: (settingController.settings["darkMode"] ?? false),
                     onChanged: (value) {
-                      settingController.changeTheme(value);
+                      settingController.saveSetting("darkMode", value);
                       Get.changeThemeMode(
-                        settingController.darkMode.value
+                        (settingController.settings["darkMode"] ?? false)
                             ? ThemeMode.dark
                             : ThemeMode.light,
                       );
@@ -112,9 +113,9 @@ class SettingPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                value: settingController.printQrcode.value,
+                value: settingController.settings["printQrcode"],
                 onChanged: (newValue) {
-                  settingController.activePrintQrCode(newValue!);
+                  settingController.saveSetting("printQrcode", newValue!);
                 },
               )),
           Obx(() => CheckboxListTile(
@@ -138,9 +139,9 @@ class SettingPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                value: settingController.printCardImage.value,
+                value: settingController.settings["printCardImage"],
                 onChanged: (newValue) {
-                  settingController.activePrintCardImage(newValue!);
+                  settingController.saveSetting("printCardImage", newValue!);
                 },
               )),
           Obx(() => CheckboxListTile(
@@ -164,9 +165,9 @@ class SettingPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                value: settingController.printInformation.value,
+                value: settingController.settings["printInformation"],
                 onChanged: (newValue) {
-                  settingController.activePrintInformation(newValue!);
+                  settingController.saveSetting("printInformation", newValue!);
                 },
               )),
           const Gap(10),

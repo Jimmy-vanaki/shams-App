@@ -74,6 +74,7 @@ class IntroPage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           Get.offAllNamed(RoutesClass.welcomePage);
+                          Constants.localStorage.write('hasSeenOnboarding', true);
                         },
                         child: Text('ابدأ'),
                       ),

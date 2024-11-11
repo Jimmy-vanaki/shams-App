@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:shams/app/core/common/constants/get_version.dart';
+import 'package:shams/app/core/common/constants/launch_url.dart';
 import 'package:shams/app/core/routes/routes.dart';
 import 'package:shams/app/features/page_view/view/getX/navigation_controller.dart';
 import 'package:shams/app/features/text_content/view/screen/text_content.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
@@ -17,6 +21,8 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final BottmNavigationController navigationController =
         Get.put(BottmNavigationController(), permanent: true);
+    final AppVersionController appVersionController =
+        Get.put(AppVersionController());
     final List<Map<String, dynamic>> drawerItemList = [
       {
         "title": 'الرئيسية',
@@ -169,10 +175,59 @@ class CustomDrawer extends StatelessWidget {
                           onTap: drawerItemList[index]['onTap'],
                           tag: index,
                           context: context,
-                        )
+                        ),
                       ],
                     );
             },
+          ),
+          const Gap(10),
+          Column(
+            children: [
+              Text.rich(
+                TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: 'الاصدار: ',
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                    TextSpan(
+                      text: appVersionController.version.value,
+                      style: const TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Gap(5),
+              ZoomTapAnimation(
+                onTap:() {
+                  // urlLauncher('https://dijlah.org');
+                },
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Powered by ',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 13,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'DIjlah IT',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

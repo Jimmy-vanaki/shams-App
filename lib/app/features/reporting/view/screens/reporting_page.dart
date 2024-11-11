@@ -28,7 +28,7 @@ class ReportingPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ReportingDate(),
+                  const ReportingDate(),
                   const Gap(20),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.start,

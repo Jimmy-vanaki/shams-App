@@ -17,8 +17,9 @@ class USerReportingList extends StatelessWidget {
       width: Get.width,
       height: Get.height - 310,
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(bottom: 90, top: 0, left: 20, right: 20),
-        itemCount: 50,
+        itemCount: 15,
         itemBuilder: (context, index) {
           PurchaseMethodsController purchaseMethodsController =
               Get.put(PurchaseMethodsController(), tag: index.toString());

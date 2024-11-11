@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class Constants {
-  static const String baseUrl = "https://shopbs.besenior.ir/api/v1";
-
+  static const String baseUrl = "https://alshams-co.net/api/v5/";
+  static final GetStorage localStorage = GetStorage();
   static BoxDecoration shamsBoxDecoration(BuildContext context) =>
       BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,

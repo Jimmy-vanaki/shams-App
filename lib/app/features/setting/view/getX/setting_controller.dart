@@ -1,25 +1,29 @@
 import 'package:get/get.dart';
+import 'package:shams/app/config/constants.dart';
 
 class SettingController extends GetxController {
-  RxBool darkMode = false.obs;
+  var settings = <String, bool>{}.obs;
 
-  RxBool printQrcode = false.obs;
-  RxBool printCardImage = false.obs;
-  RxBool printInformation = false.obs;
+  var defaultSettings = {
+    "darkMode": false,
+    "printQrcode": false,
+    "printCardImage": false,
+    "printInformation": false,
+  }.obs;
 
-  changeTheme(bool dark) {
-    darkMode.value = dark;
+  @override
+  void onInit() {
+    super.onInit();
+    var storedSettings = Constants.localStorage.read('settings');
+    if (storedSettings != null) {
+      settings.assignAll(Map<String, bool>.from(storedSettings));
+    } else {
+      settings.assignAll(Map<String, bool>.from(defaultSettings));
+    }
   }
 
-  activePrintQrCode(bool active) {
-    printQrcode.value = active;
-  }
-
-  activePrintCardImage(bool active) {
-    printCardImage.value = active;
-  }
-
-  activePrintInformation(bool active) {
-    printInformation.value = active;
+  void saveSetting(String key, bool value) {
+    settings[key] = value;
+    Constants.localStorage.write('settings', settings);
   }
 }

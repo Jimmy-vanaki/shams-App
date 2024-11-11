@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 class OnboardingController extends GetxController {
   PageController pageController = PageController();
-
   RxInt page = 0.obs;
 
   void goToPage(int index) {

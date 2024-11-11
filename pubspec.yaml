@@ -53,6 +53,9 @@ dependencies:
   board_datetime_picker: ^2.1.4
   share_plus: ^10.1.2
   image_picker: ^1.1.2
+  get_storage: ^2.1.1
+  package_info_plus: ^8.1.1
+  # url_launcher: ^6.2.6
 
 dev_dependencies:
   flutter_test:
