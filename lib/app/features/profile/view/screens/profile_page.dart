@@ -88,7 +88,7 @@ class ProfilePage extends StatelessWidget {
               ),
               child: ZoomTapAnimation(
                 onTap: () {
-                  Get.toNamed(RoutesClass.editProfilePage);
+                  Get.toNamed(Routes.editProfilePage);
                 },
                 child: SvgPicture.asset(
                   'assets/svgs/user-pen.svg',

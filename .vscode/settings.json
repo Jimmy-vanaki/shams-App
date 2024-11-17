@@ -4,5 +4,6 @@
         "titleBar.activeBackground": "#792112",
         "titleBar.activeForeground": "#FEF8F7"
     },
-    "CodeGPT.apiKey": "CodeGPT Plus Beta"
+    "CodeGPT.apiKey": "CodeGPT Plus Beta",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -66,7 +66,7 @@ class CompaniesArchivePage extends StatelessWidget {
                   builder: (context, index) {
                     return ZoomTapAnimation(
                       onTap: () {
-                        Get.toNamed(RoutesClass.productArchivePage);
+                        Get.toNamed(Routes.productArchivePage);
                       },
                       child: Container(
                         clipBehavior: Clip.antiAlias,

@@ -17,8 +17,8 @@ class SplashPage extends StatelessWidget {
       const Duration(seconds: 3),
       () {
         hasSeenOnboarding
-            ? Get.offAllNamed(RoutesClass.home)
-            : Get.offAllNamed(RoutesClass.intro);
+            ? Get.offAllNamed(Routes.home)
+            : Get.offAllNamed(Routes.intro);
       },
     );
     return Scaffold(

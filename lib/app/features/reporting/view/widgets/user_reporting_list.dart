@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/features/home/view/getX/purchase_methods_controller.dart';
-import 'package:shams/app/features/home/view/widgets/purchase_methods_item.dart';
+import 'package:shams/app/features/purchase_methods/view/screens/purchase_methods_item.dart';
 
 class USerReportingList extends StatelessWidget {
   const USerReportingList({
@@ -63,23 +63,11 @@ class USerReportingList extends StatelessWidget {
                   ),
                   const Gap(10),
                   SizedBox(
-                    child: Expanded(
-                      child: PurchaseMethodsItem(
-                        scale: 40,
-                        tag: index.toString(),
-                      ),
+                    width: double.infinity,
+                    child: PurchaseMethodsItem(
+                      scale: 40,
+                      tag: index.toString(),
                     ),
-                  ),
-                  const Gap(10),
-                  Obx(
-                    () {
-                      return (purchaseMethodsController
-                                  .purchaseMethodsSelected.value !=
-                              -1)
-                          ? ElevatedButton(
-                              onPressed: () {}, child: Text('تأكيد'))
-                          : const SizedBox();
-                    },
                   ),
                 ],
               ),

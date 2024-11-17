@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
               }).toList(),
             ),
             Separator(title: 'الشركات', ontap: () {
-              Get.toNamed(RoutesClass.companiesArchivePage);
+              Get.toNamed(Routes.companiesArchivePage);
             }),
             const CompanyListSlider(),
             const Separator(title: 'مختارات'),

@@ -17,21 +17,21 @@ class OtherServices extends StatelessWidget {
         "title": 'TopUp',
         "icon": 'point-of-sale-bill',
         "onTap": () {
-          Get.toNamed(RoutesClass.invoicePage);
+          Get.toNamed(Routes.invoicePage);
         },
       },
       {
         "title": 'فاتورة',
         "icon": 'digital-payment',
         "onTap": () {
-          Get.toNamed(RoutesClass.invoicePage);
+          Get.toNamed(Routes.invoicePage);
         },
       },
       {
         "title": 'باقات',
         "icon": 'box-open',
         "onTap": () {
-          Get.toNamed(RoutesClass.internetPackagesPage);
+          Get.toNamed(Routes.internetPackagesPage);
         },
       },
     ];

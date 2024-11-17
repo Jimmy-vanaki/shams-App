@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/core/common/widgets/bottom_navigation_bar.dart';
 import 'package:shams/app/core/routes/routes.dart';
-import 'package:shams/app/features/about_us/view/screens/about_page.dart';
+import 'package:shams/app/features/text_content/view/screen/about_page.dart';
 import 'package:shams/app/features/home/view/screens/home_page.dart';
 import 'package:shams/app/features/page_view/view/getX/navigation_controller.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
@@ -58,7 +58,7 @@ class MainPageView extends GetView<ScaffoldController> {
                   padding: const EdgeInsets.only(left: 20),
                   child: ZoomTapAnimation(
                     onTap: () {
-                      Get.toNamed(RoutesClass.getNotifArchiveRoute());
+                      Get.toNamed(Routes.notifArchive);
                     },
                     child: SvgPicture.asset(
                       'assets/svgs/bell.svg',
@@ -105,20 +105,17 @@ class MainPageView extends GetView<ScaffoldController> {
         ),
         Obx(
           () => Visibility(
+            visible: controller.drawerOpen.value,
             child: Positioned(
               left: 0,
               child: GestureDetector(
                 onTap: () {
                   controller.closeDrawer();
                 },
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: controller.drawerOpen.value ? 1.0 : 0.0,
-                  child: Container(
-                    color: Colors.black38,
-                    width: Get.width - 260,
-                    height: Get.height,
-                  ),
+                child: Container(
+                  color: Colors.transparent,
+                  width: Get.width - 260,
+                  height: Get.height,
                 ),
               ),
             ),

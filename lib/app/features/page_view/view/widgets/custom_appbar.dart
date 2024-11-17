@@ -32,7 +32,7 @@ AppBar customAppBar(BuildContext context , ScaffoldController controller) {
         padding: const EdgeInsets.only(left: 20),
         child: ZoomTapAnimation(
           onTap: () {
-            Get.toNamed(RoutesClass.getNotifArchiveRoute());
+            Get.toNamed(Routes.notifArchive);
           },
           child: SvgPicture.asset(
             'assets/svgs/bell.svg',

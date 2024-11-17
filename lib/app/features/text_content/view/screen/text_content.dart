@@ -17,11 +17,11 @@ class TextContent extends StatelessWidget {
     return InternalPage(
       title: title,
       customWidget: Container(
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         decoration: Constants.shamsBoxDecoration(context),
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
                 Text(

@@ -37,7 +37,7 @@ class CustomDrawer extends StatelessWidget {
         "icon": 'user',
         "onTap": () {
           Get.toNamed(
-            RoutesClass.getProfilePage(),
+            Routes.profilePage,
           );
         },
       },
@@ -46,7 +46,7 @@ class CustomDrawer extends StatelessWidget {
         "icon": 'bell',
         "onTap": () {
           Get.toNamed(
-            RoutesClass.getNotifArchiveRoute(),
+            Routes.notifArchive,
           );
         },
       },
@@ -62,7 +62,7 @@ class CustomDrawer extends StatelessWidget {
         "title": 'سياسية الخصوصية',
         "icon": 'confidential-discussion',
         "onTap": () {
-          Get.toNamed(RoutesClass.getTextContent(),
+          Get.toNamed(Routes.textContent,
               arguments:
                   const TextContent(title: 'سياسية الخصوصية', text: 'text'));
         },
@@ -71,7 +71,7 @@ class CustomDrawer extends StatelessWidget {
         "title": 'الدعم الفني',
         "icon": 'user-headset',
         "onTap": () {
-          Get.toNamed(RoutesClass.getTextContent(),
+          Get.toNamed(Routes.textContent,
               arguments: const TextContent(title: 'الدعم الفني', text: 'text'));
         },
       },
@@ -80,7 +80,7 @@ class CustomDrawer extends StatelessWidget {
         "icon": 'terms-info',
         "onTap": () {
           // sliderDrawerKey.currentState?.closeSlider();
-          Get.toNamed(RoutesClass.getTextContent(),
+          Get.toNamed(Routes.textContent,
               arguments:
                   const TextContent(title: 'الشروط والقوانين', text: 'text'));
         },
@@ -203,8 +203,8 @@ class CustomDrawer extends StatelessWidget {
               ),
               const Gap(5),
               ZoomTapAnimation(
-                onTap:() {
-                  // urlLauncher('https://dijlah.org');
+                onTap: () {
+                  urlLauncher('https://dijlah.org');
                 },
                 child: Text.rich(
                   TextSpan(

@@ -7,17 +7,20 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shams/app/core/init/init.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  WidgetsFlutterBinding.ensureInitialized();
   await init();
-  runApp(const MyApp());
+  final bool darkMode =
+      Constants.localStorage.read('settings')?['darkMode'] ?? false;
+  runApp(MyApp(darkMode: darkMode));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool darkMode;
+
+  const MyApp({super.key, required this.darkMode});
+
   @override
   Widget build(BuildContext context) {
-    bool darkMode =
-        Constants.localStorage.read('settings')['darkMode'] ?? false;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
@@ -30,14 +33,12 @@ class MyApp extends StatelessWidget {
         Locale('ar'),
       ],
       locale: const Locale('ar'),
-      title: 'Flutter Demo',
+      title: Constants.appTitle,
       themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
-      // dark
       darkTheme: MyThemes.darkTheme,
-      // light
       theme: MyThemes.lightTheme,
-      initialRoute: RoutesClass.getSplshRoute(),
-      getPages: RoutesClass.routes,
+      initialRoute: Routes.splash,
+      getPages: Routes.pages,
     );
   }
 }

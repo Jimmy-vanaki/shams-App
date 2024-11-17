@@ -109,7 +109,7 @@ class Signin extends StatelessWidget {
                   // focusNode: focus,
                   onPressed: () {
                     FocusScope.of(context).unfocus();
-                    Get.offNamed(RoutesClass.getHomeRoute());
+                    Get.offNamed(Routes.home);
                     debugPrint('=======>statement');
                   },
                   child: const Text('دخول'),
