@@ -2,9 +2,9 @@ import 'package:auto_height_grid_view/auto_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:shams/app/config/connectivity_controller.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/routes/routes.dart';
+import 'package:shams/app/features/services/view/screens/invoice_page.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class OtherServices extends StatelessWidget {
@@ -17,14 +17,19 @@ class OtherServices extends StatelessWidget {
         "title": 'TopUp',
         "icon": 'point-of-sale-bill',
         "onTap": () {
-          Get.toNamed(Routes.invoicePage);
+          Get.toNamed(Routes.invoicePage,
+              arguments: const InvoicePage(type: 'topup', title: 'TOPUP'));
+
         },
       },
       {
         "title": 'فاتورة',
         "icon": 'digital-payment',
         "onTap": () {
-          Get.toNamed(Routes.invoicePage);
+          // Get.toNamed(Routes.invoicePage,
+          //     arguments: const InvoicePage(type: 'bill', title: 'فاتورة'));
+
+          Get.snackbar('تنبيه', 'الخدمة المطلوبة غير مفعلة حاليا');
         },
       },
       {

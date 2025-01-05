@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class CompanySliderController extends GetxController {
-  RxInt selected = 0.obs;
+  RxInt selected = (-1).obs;
 
   currentCompany(index) {
     selected.value = index;

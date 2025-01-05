@@ -46,7 +46,7 @@ class IntroPage extends StatelessWidget {
               onTap: () {
                 onBoardingController.goToPage(2);
               },
-              child: Text('يتخطى'),
+              child: const Text('تخطي'),
             ),
           ),
           Obx(
@@ -73,10 +73,10 @@ class IntroPage extends StatelessWidget {
                       width: (double.infinity),
                       child: ElevatedButton(
                         onPressed: () {
-                          Get.offAllNamed(Routes.welcomePage);
+                          Get.offAllNamed(Routes.home);
                           Constants.localStorage.write('hasSeenOnboarding', true);
                         },
-                        child: Text('ابدأ'),
+                        child: const Text('ابدأ'),
                       ),
                     ),
             ),

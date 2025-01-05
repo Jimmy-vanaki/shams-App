@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
+import 'package:shams/app/features/home/data/data_source/products_api_provider.dart';
 
 class CategoryDropdown extends StatelessWidget {
   const CategoryDropdown({
     super.key,
     required this.itemList,
+    required this.onSelected,
   });
   final List<DropdownMenuEntry<String>> itemList;
+  final void Function(String?) onSelected;
   @override
   Widget build(BuildContext context) {
+    final ProductsApiProvider productsApiProvider =
+        Get.put(ProductsApiProvider(), tag: 'archive');
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Expanded(
@@ -26,7 +32,7 @@ class CategoryDropdown extends StatelessWidget {
           child: DropdownMenu(
             enableFilter: true,
             requestFocusOnTap: true,
-            hintText: 'انتخاب',
+            hintText: 'اختيار',
             trailingIcon: SvgPicture.asset(
               'assets/svgs/angle-small-down.svg',
               width: 20,
@@ -51,10 +57,18 @@ class CategoryDropdown extends StatelessWidget {
               border: UnderlineInputBorder(borderSide: BorderSide.none),
             ),
             searchCallback: (entries, query) {
-              print('======>'+entries.length.toString());
-              return entries.length;
+              final filteredEntries = entries.where((entry) {
+                return entry.label.toLowerCase().contains(query.toLowerCase());
+              }).toList();
+
+              final count = filteredEntries.length;
+              return count > entries.length ? entries.length : count;
             },
-            onSelected: (icon) {},
+            onSelected: onSelected,
+            // onSelected: (id) {
+            //   print(id);
+            //   productsApiProvider.fetchProducts(int.tryParse(id!) ?? 0);
+            // },
             dropdownMenuEntries: itemList,
           ),
         ),

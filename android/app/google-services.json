@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "430675544378",
+    "firebase_url": "https://alshamsco-7e723.firebaseio.com",
+    "project_id": "alshamsco-7e723",
+    "storage_bucket": "alshamsco-7e723.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430675544378:android:869a3a71931adf4658e803",
+        "android_client_info": {
+          "package_name": "com.dijlah.alshamsco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430675544378-0b0q4onfptrjoted1ujimgkq7ms7od2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv18yKiv63qnKt3CP2slBcmzvkhtw9QZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430675544378-0b0q4onfptrjoted1ujimgkq7ms7od2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

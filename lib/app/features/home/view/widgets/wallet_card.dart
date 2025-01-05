@@ -1,94 +1,118 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
+import 'package:shams/app/config/functions.dart';
+import 'package:shams/app/core/data/data_source/update_info.dart';
+import 'package:shams/app/core/utils/custom_loading.dart';
 
 class WalletCard extends StatelessWidget {
   const WalletCard({
     super.key,
-    required this.size,
   });
-
-  final Size size;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      width: size.width,
-      padding: const EdgeInsets.all(20),
-      alignment: Alignment.center,
-      decoration: Constants.shamsBoxDecoration(context).copyWith(
-        image: DecorationImage(
-          image: AssetImage(
-            'assets/images/bg-v-card.png',
-          ),
-          colorFilter: ColorFilter.mode(
-              Theme.of(context).colorScheme.primary, BlendMode.color),
-          fit: BoxFit.fill,
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          ColorFiltered(
-            colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.onPrimary, BlendMode.srcIn),
-            child: Image.asset(
-              'assets/images/logo-01.png',
-              width: 70,
-              height: 60,
+    final UpdateController updateController = Get.find<UpdateController>();
+    return Obx(
+      () {
+        if (updateController.userData.isEmpty) {
+          return const Center(
+            child: CustomLoading(),
+          );
+        }
+        final user = updateController.userData.first;
+
+        return Container(
+          height: 200,
+          width: Get.width,
+          padding: const EdgeInsets.all(20),
+          alignment: Alignment.center,
+          decoration: Constants.shamsBoxDecoration(context).copyWith(
+            image: DecorationImage(
+              image: const AssetImage(
+                'assets/images/bg-v-card.png',
+              ),
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.primary, BlendMode.color),
+              fit: BoxFit.fill,
             ),
+            borderRadius: BorderRadius.circular(20),
           ),
-          Text(
-            'mohammad vanaki',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          Text(
-            'm.vanaki77@gmail.com',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 11,
-            ),
-          ),
-          const Gap(10),
-          Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Text(
-                  '      رصيدك',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 15,
-                  ),
-                ),
+              // Main widget
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  // Adjust the image height to a maximum and allow width to adapt dynamically
+                  return CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    height: 70, // Use maximum height of the parent
+                    width: null, // Auto width; will adjust dynamically
+                    imageUrl: user.user?.agent?.appPhotoUrl ?? '',
+                    placeholder: (context, url) => const CustomLoading(),
+                    errorWidget: (context, url, error) => ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.onPrimary,
+                        BlendMode.srcIn,
+                      ),
+                      child: Image.asset(
+                        'assets/images/defultLogo.png',
+                        fit: BoxFit.fill,
+                        height: 70, // Maximum height for the error image
+                        width: null, // Auto width for error image
+                      ),
+                    ),
+                  );
+                },
               ),
+
               Text(
-                '1,250,000',
-                textAlign: TextAlign.center,
+                user.user?.name ?? '',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimary,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 17,
                 ),
               ),
-              Expanded(
-                child: Text(
-                  '    IQD',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 15,
+              const Gap(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '      رصيدك',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 15,
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                  Text(
+                    formatNumber(user.user?.totalBalance ?? 000) ?? '',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '    IQD',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
-      ),
+          ),
+        );
+      },
     );
   }
 }

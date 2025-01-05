@@ -3,8 +3,14 @@ import 'package:get_storage/get_storage.dart';
 
 class Constants {
   static const String appTitle = 'Shams';
-  static const String baseUrl = "https://alshams-co.net/api/v5/";
+  static const String baseUrl = "http://alshams-co.net/api/v6";
+  static const String basePhotoUrl = "http://alshams-co.net/uploads/source/";
+
   static final GetStorage localStorage = GetStorage();
+  static String userToken = '';
+  static String fcmToken = '';
+
+  static bool isLoggedIn = false;
   static BoxDecoration shamsBoxDecoration(BuildContext context) =>
       BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,

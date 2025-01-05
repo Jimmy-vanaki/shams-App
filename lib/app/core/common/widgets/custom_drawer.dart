@@ -1,11 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/common/constants/get_version.dart';
 import 'package:shams/app/core/common/constants/launch_url.dart';
+import 'package:shams/app/core/common/widgets/offline_widget.dart';
+import 'package:shams/app/core/data/data_source/logout_api_provider.dart';
+import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/routes/routes.dart';
+import 'package:shams/app/core/utils/custom_loading.dart';
 import 'package:shams/app/features/page_view/view/getX/navigation_controller.dart';
 import 'package:shams/app/features/text_content/view/screen/text_content.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -21,8 +27,10 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final BottmNavigationController navigationController =
         Get.put(BottmNavigationController(), permanent: true);
+
     final AppVersionController appVersionController =
         Get.put(AppVersionController());
+
     final List<Map<String, dynamic>> drawerItemList = [
       {
         "title": 'الرئيسية',
@@ -30,16 +38,35 @@ class CustomDrawer extends StatelessWidget {
         "onTap": () {
           sliderDrawerKey.currentState?.closeSlider();
           navigationController.goToPage(0);
-        },
+        }
       },
+      if (Constants.isLoggedIn)
+        {
+          "title": 'الملف الشخصي',
+          "icon": 'user',
+          "onTap": () {
+            Get.toNamed(
+              Routes.profilePage,
+            );
+          }
+        },
       {
-        "title": 'الملف الشخصي',
-        "icon": 'user',
+        "title": 'عمليات المستخدم',
+        "icon": 'file-user',
         "onTap": () {
           Get.toNamed(
-            Routes.profilePage,
+            Routes.userOperation,
           );
-        },
+        }
+      },
+      {
+        "title": 'تقارير الـ TopUp والباقات',
+        "icon": 'stats',
+        "onTap": () {
+          Get.toNamed(
+            Routes.reportingTopup,
+          );
+        }
       },
       {
         "title": 'الاشعارات',
@@ -48,32 +75,32 @@ class CustomDrawer extends StatelessWidget {
           Get.toNamed(
             Routes.notifArchive,
           );
-        },
-      },
-      {
-        "title": 'حول التطبيق',
-        "icon": 'info',
-        "onTap": () {
-          sliderDrawerKey.currentState?.closeSlider();
-          navigationController.goToPage(1);
-        },
+        }
       },
       {
         "title": 'سياسية الخصوصية',
         "icon": 'confidential-discussion',
         "onTap": () {
-          Get.toNamed(Routes.textContent,
-              arguments:
-                  const TextContent(title: 'سياسية الخصوصية', text: 'text'));
-        },
+          urlLauncher('http://alshams-co.com/privacy_policy_alshams_co.html');
+        }
       },
       {
         "title": 'الدعم الفني',
         "icon": 'user-headset',
         "onTap": () {
+          final updateController = Get.find<UpdateController>();
+          if (updateController.userData.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          final user = updateController.userData.first;
           Get.toNamed(Routes.textContent,
-              arguments: const TextContent(title: 'الدعم الفني', text: 'text'));
-        },
+              arguments: TextContent(
+                title: 'الدعم الفني',
+                text: user.user?.agent?.supportText ??
+                    '''بامكانكم الاتصال بخدمة الدعم الفني عبر الرقم التالي :
+                      07702882883''',
+              ));
+        }
       },
       {
         "title": 'الشروط والقوانين',
@@ -81,17 +108,20 @@ class CustomDrawer extends StatelessWidget {
         "onTap": () {
           // sliderDrawerKey.currentState?.closeSlider();
           Get.toNamed(Routes.textContent,
-              arguments:
-                  const TextContent(title: 'الشروط والقوانين', text: 'text'));
-        },
-      },
-      {
-        "title": 'إعدادات',
-        "icon": 'settings',
-        "onTap": () {
-          sliderDrawerKey.currentState?.closeSlider();
-          navigationController.goToPage(2);
-        },
+              arguments: const TextContent(title: 'الشروط والقوانين', text: '''
+•⁠  ⁠شرائك لأي من المنتجات تعبر عن موافقتك لجميع هذه البنود في الصفحة.
+•⁠  ⁠جميع المنتجات إلكترونية، غير عينية، وتصل لصفحة “الطلبات” على حسابك بالمتجر.
+•⁠  ⁠قبل الدفع يتوجب على العميل قراءة وصف المنتج بعناية.
+•⁠  ⁠شراء العميل لاي منتج يعبر عن موافقته لمواصفات وشروط المنتجات المذكورة في هذه الصفحة.
+•⁠  ⁠جميع المنتجات غير قابلة للاسترداد والاسترجاع نهائياً.
+•⁠  ⁠أي بيانات يخطئ في تزويدها العميل للمتجر تخص الطلب لا يتحمل المتجر أي مسؤولية في ذلك.
+•⁠  ⁠في حالة حصول خلل لأي من المنتجات, يجب على العميل توفير فيديو كامل اثناء لحظة شراءه يثبت ذلك ( ولن تقبل الشكوى بدون فيديو ).
+•⁠  ⁠لا يتحمل متجرنا أي مسؤولية لمشتريات خاطئة قمت بها بذاتك، بسبب الاهمال أو إدخال معلومات زائفة /خاطئة، أو أي سبب آخر مما قد يؤدي إلى • أضرار/خسارات كما أن المتجر غير ملزم بتبديل أو أسترجاع اي منتج تم وصول بياناتها إليك وبهذا تكون قد فهمت و أقررت وقبلت إخلاء متجرنا من المسؤولية تماماً.
+•⁠  ⁠بعد التسليم، لا يعتبر المتجر مسؤول عن أي ضياع أو ضرر للسلع الإلكترونية التي تم شرائها من خلال متجرنا ، وأي خسارة أو ضرر قد يعاني منه المشتري لهذا السبب.
+•⁠  ⁠يتم تغيير الاسعار في الموقع بشكل يومي/اسبوعي/شهري ولا يحق للعميل مطالبة الفرق لان هناك عروض يوميا ربما يكون هناك ارتفاع/انخفاض في الاسعار، وليس ملزوم متجرنا بدفع الفرق او تثبيت السعر.
+•⁠  ⁠يحق للمتجر تغيير أو إضافة بنود في هذه الصفحة في اي وقت تراه مناسب و يجب على العميل متابعة البنود حتى بدون تنبيه.
+'''));
+        }
       },
       {
         "title": 'خروج',
@@ -115,7 +145,9 @@ class CustomDrawer extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    logout();
+                  },
                   child: const Text(
                     'نعم',
                     style: TextStyle(
@@ -137,32 +169,60 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text(
-              'Mohammad',
-              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-            ),
-            accountEmail: Text(
-              'm.vanaki77@gmail.com',
-              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-            ),
-            currentAccountPicture: ClipOval(
-              child: Image.asset('assets/images/profile.png'),
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: drawerItemList.length,
-            itemBuilder: (context, index) {
-              return index != 7
+          Constants.isLoggedIn
+              ? Obx(
+                  () {
+                    final updateController = Get.find<UpdateController>();
+                    if (updateController.userData.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    final user = updateController.userData.first;
+                    return UserAccountsDrawerHeader(
+                      accountName: Text(
+                        user.user?.name ?? '',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                      accountEmail: Text(
+                        user.user?.username ?? '',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                      currentAccountPicture: ClipOval(
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          height: 70,
+                          width: 60,
+                          imageUrl: user.user?.photoUrl ?? '',
+                          placeholder: (context, url) => const CustomLoading(),
+                          errorWidget: (context, url, error) => Image.asset(
+                            'assets/images/profile.png',
+                            fit: BoxFit.fill,
+                            height: 70,
+                            width: 60,
+                          ),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    );
+                  },
+                )
+              : Container(
+                  margin: const EdgeInsets.only(
+                      top: 30, bottom: 20, right: 5, left: 5),
+                  child: const OfflineWidget(),
+                ),
+          ...List.generate(
+            drawerItemList.length,
+            (index) {
+              return index < drawerItemList.length - 1
                   ? drawerItemWidget(
                       title: drawerItemList[index]['title'],
                       icon: drawerItemList[index]['icon'],
                       onTap: drawerItemList[index]['onTap'],
+                      totalItems: drawerItemList.length,
                       tag: index,
                       context: context,
                     )
@@ -173,6 +233,7 @@ class CustomDrawer extends StatelessWidget {
                           title: drawerItemList[index]['title'],
                           icon: drawerItemList[index]['icon'],
                           onTap: drawerItemList[index]['onTap'],
+                          totalItems: drawerItemList.length,
                           tag: index,
                           context: context,
                         ),
@@ -186,16 +247,18 @@ class CustomDrawer extends StatelessWidget {
               Text.rich(
                 TextSpan(
                   children: [
-                    const TextSpan(
+                    TextSpan(
                       text: 'الاصدار: ',
                       style: TextStyle(
                         fontSize: 12,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     TextSpan(
                       text: appVersionController.version.value,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
@@ -212,7 +275,10 @@ class CustomDrawer extends StatelessWidget {
                       TextSpan(
                         text: 'Powered by ',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(100),
                           fontSize: 13,
                         ),
                       ),
@@ -220,7 +286,10 @@ class CustomDrawer extends StatelessWidget {
                         text: 'DIjlah IT',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(100),
                         ),
                       ),
                     ],
@@ -238,14 +307,16 @@ class CustomDrawer extends StatelessWidget {
     required String title,
     required String icon,
     required int tag,
+    required int totalItems,
     required Function() onTap,
     required BuildContext context,
   }) {
+    bool isLastItem = tag == totalItems - 1;
     return ListTile(
       leading: SvgPicture.asset(
         'assets/svgs/$icon.svg',
         colorFilter: ColorFilter.mode(
-          tag != 8 ? Theme.of(context).colorScheme.primary : Colors.red,
+          !isLastItem ? Theme.of(context).colorScheme.primary : Colors.red,
           BlendMode.srcIn,
         ),
       ),
@@ -253,10 +324,11 @@ class CustomDrawer extends StatelessWidget {
         title,
         style: TextStyle(
           fontSize: 14,
-          color: tag != 8 ? Theme.of(context).colorScheme.primary : Colors.red,
+          color:
+              !isLastItem ? Theme.of(context).colorScheme.primary : Colors.red,
         ),
       ),
-      trailing: tag != 8
+      trailing: !isLastItem
           ? SvgPicture.asset(
               'assets/svgs/angle-left.svg',
               width: 12,
