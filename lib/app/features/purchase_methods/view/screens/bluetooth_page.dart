@@ -204,7 +204,6 @@ class BluetoothPage extends StatelessWidget {
 
         // چاپ جداکننده
         printText('\n --------------- \n\n');
-        bluetoothController.printed.value = true;
       }
     }
 
@@ -292,6 +291,7 @@ class BluetoothPage extends StatelessWidget {
                                   if (!bluetoothController.printed.value) {
                                     captureAndSavePng();
                                   }
+                                  bluetoothController.printed.value = true;
                                 },
                                 label: const Text('طباعة'),
                                 icon: SvgPicture.asset(
