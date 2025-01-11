@@ -10,17 +10,33 @@ class ProductsApiProvider extends GetxController {
   var productsDataList = <ProductModel>[].obs;
   late Dio dio;
   final rxRequestStatus = Status.initial.obs;
+  CancelToken? cancelToken;
 
   @override
   void onInit() {
     super.onInit();
-    dio = Dio();
+    dio = Dio(BaseOptions(
+      receiveTimeout: const Duration(milliseconds: 20000),
+      validateStatus: (status) {
+        return status! < 500;
+      },
+    ));
   }
 
   Future<void> fetchProducts(int companyId) async {
     print(companyId);
     print(Constants.userToken);
+
+    // Cancel any ongoing request if it exists
+    if (cancelToken != null) {
+      cancelToken?.cancel("Request cancelled due to new request.");
+    }
+
+    // Create a new CancelToken for the new request
+    cancelToken = CancelToken();
+
     rxRequestStatus.value = Status.loading;
+
     try {
       final response = await dio.post(
         "${Constants.baseUrl}/company_categories",
@@ -33,6 +49,7 @@ class ProductsApiProvider extends GetxController {
             'Content-Type': 'application/json',
           },
         ),
+        cancelToken: cancelToken,
       );
 
       print(response.statusCode);
@@ -49,14 +66,24 @@ class ProductsApiProvider extends GetxController {
         );
         print(response.statusCode);
       } else if (response.statusCode == 401) {
+        rxRequestStatus.value = Status.error;
         handleLogout(response.data['error']['message']);
       } else {
         rxRequestStatus.value = Status.error;
+        if (Get.isSnackbarOpen == false) {
+          Get.closeAllSnackbars();
+          Get.snackbar(
+            'خطأ',
+            'فشل في جلب البيانات.',
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 3),
+          );
+        }
+        Get.closeAllSnackbars();
         Get.snackbar('خطأ', 'فشل في جلب البيانات.');
       }
     } catch (e) {
-      print(e);
-      rxRequestStatus.value = Status.error;
+      print("Request was cancelled");
     }
   }
 }

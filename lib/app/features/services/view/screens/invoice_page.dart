@@ -7,20 +7,11 @@ import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/functions.dart';
 import 'package:shams/app/core/common/widgets/internal_page.dart';
 import 'package:shams/app/core/common/widgets/offline_widget.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
-import 'package:shams/app/core/data/models/update_info_model.dart';
 import 'package:shams/app/features/services/view/getX/invoice_controller.dart';
 import 'package:shams/app/features/services/view/widgets/invoice_modal_confirm.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-
-InvoiceController invoiceController = Get.put(InvoiceController());
-final updateController = Get.find<UpdateController>();
-final List<dynamic> shortcutList = updateController
-    .userData.first.asiacellCategories!
-    .where((category) => category.type == Type.TOPUP)
-    .map((category) => category.toJson())
-    .toList();
-final formKey = GlobalKey<FormState>();
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
+import 'package:shams/app/features/home/data/models/home_model.dart';
 
 class InvoicePage extends StatelessWidget {
   const InvoicePage({
@@ -32,6 +23,15 @@ class InvoicePage extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
+    InvoiceController invoiceController = Get.put(InvoiceController());
+    final homeApiProvider = Get.find<HomeApiProvider>();
+    final List<dynamic> shortcutList = homeApiProvider
+        .homeDataList.first.asiacellCategories!
+        .where((category) => category.type == Type.TOPUP)
+        .map((category) => category.toJson())
+        .toList();
+    final formKey = GlobalKey<FormState>();
+    
     return InternalPage(
       title: title,
       customWidget: SingleChildScrollView(
@@ -130,7 +130,9 @@ class InvoicePage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    formatNumber(shortcutList[index]['price']) ?? '',
+                                    formatNumber(
+                                            shortcutList[index]['price']) ??
+                                        '',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: invoiceController.selected.value ==

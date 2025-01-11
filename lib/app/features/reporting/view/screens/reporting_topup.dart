@@ -46,31 +46,39 @@ class ReportingTopup extends StatelessWidget {
                       children: [
                         const ReportingDate(),
                         const Gap(10),
-                        ElevatedButton(
-                          onPressed: () {
-                            topupReportApiProvider.fetchReportData(
-                              startDate: reportValueController.startDate.value,
-                              endDate: reportValueController.endDate.value,
-                            );
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svgs/paper-plane-top.svg',
-                                width: 20,
-                                height: 20,
-                                colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.onPrimary,
-                                  BlendMode.srcIn,
+                        Obx(
+                          () => ElevatedButton(
+                            onPressed: topupReportApiProvider
+                                        .rxRequestButtonStatus.value ==
+                                    Status.loading
+                                ? null
+                                : () {
+                                    topupReportApiProvider.fetchReportData(
+                                      startDate:
+                                          reportValueController.startDate.value,
+                                      endDate:
+                                          reportValueController.endDate.value,
+                                    );
+                                  },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svgs/paper-plane-top.svg',
+                                  width: 20,
+                                  height: 20,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
-                              ),
-                              const Gap(10),
-                              const Text(
-                                'ارسال',
-                              ),
-                            ],
+                                const Gap(10),
+                                const Text(
+                                  'ارسال',
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         const Gap(10),
@@ -212,9 +220,8 @@ class ReportingTopup extends StatelessWidget {
                                                             .reportDataList
                                                             .first
                                                             .transactions[index]
-                                                            .createdAt
-                                                            .toString()
-                                                            .substring(0, 19),
+                                                            .createdAtFormatted
+                                                            .toString(),
                                                         style: dataStyle,
                                                         textAlign:
                                                             TextAlign.right,

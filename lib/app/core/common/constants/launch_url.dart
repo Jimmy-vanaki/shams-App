@@ -8,6 +8,7 @@ Future<void> urlLauncher(String url) async {
       throw Exception('Could not launch $url');
     }
   } catch (e) {
+    Get.closeAllSnackbars();
     Get.snackbar('Error', 'Error: $e');
   }
 }

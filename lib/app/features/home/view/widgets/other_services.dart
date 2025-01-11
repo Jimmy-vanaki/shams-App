@@ -19,7 +19,6 @@ class OtherServices extends StatelessWidget {
         "onTap": () {
           Get.toNamed(Routes.invoicePage,
               arguments: const InvoicePage(type: 'topup', title: 'TOPUP'));
-
         },
       },
       {
@@ -28,7 +27,7 @@ class OtherServices extends StatelessWidget {
         "onTap": () {
           // Get.toNamed(Routes.invoicePage,
           //     arguments: const InvoicePage(type: 'bill', title: 'فاتورة'));
-
+          Get.closeAllSnackbars();
           Get.snackbar('تنبيه', 'الخدمة المطلوبة غير مفعلة حاليا');
         },
       },

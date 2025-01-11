@@ -54,10 +54,11 @@ class EditeProfileApiProvider extends GetxController {
 
       if (response.statusCode == 200) {
         Constants.localStorage.remove('userInfo');
+        Get.closeAllSnackbars();
         Get.snackbar('تنبيه', 'تم حفظ المعلومات');
         rxRequestStatus.value = Status.completed;
         final UpdateController updateController = Get.find<UpdateController>();
-        await updateController.updateInformation(Constants.userToken);
+        await updateController.updateInformation();
       } else if (response.statusCode == 401) {
         handleLogout(response.data['error']['message']);
       } else {

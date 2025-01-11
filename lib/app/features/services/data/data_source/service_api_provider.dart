@@ -18,7 +18,8 @@ class ServiceApiProvider extends GetxController {
   ));
 
   final rxRequestStatus = Status.initial.obs;
-
+  final UpdateController updateController = Get.find<UpdateController>();
+  
   Future fetchTransaction({
     required String phone,
     required String categoryId,
@@ -50,10 +51,11 @@ class ServiceApiProvider extends GetxController {
       print('++++++++++${response}');
       if (response.statusCode == 200) {
         rxRequestStatus.value = Status.completed;
-        final UpdateController updateController = Get.put(UpdateController());
-        await updateController.updateInformation(Constants.userToken);
+        //
+        // await updateController.updateInformation();
+        updateController.inventory.value = response.data['inventory'];
+        updateController.update();
         Get.back();
-
         showResult(
             phone: phone,
             trackingCode: response.data['data'],
@@ -64,10 +66,12 @@ class ServiceApiProvider extends GetxController {
       } else {
         rxRequestStatus.value = Status.error;
         errorMessage.value = response.data['message'];
+        Get.closeAllSnackbars();
         Get.snackbar('خطأ', response.data['message']);
       }
     } catch (e) {
       rxRequestStatus.value = Status.error;
+      Get.closeAllSnackbars();
       Get.snackbar('خطأ', 'فشل في جلب البيانات.');
       errorMessage.value = 'لم تتم العملية بشكل صحيح، يرجى اعادة المحاولة';
       print(e);

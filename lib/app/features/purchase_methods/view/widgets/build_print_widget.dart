@@ -8,6 +8,7 @@ import 'package:shams/app/config/functions.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
 import 'package:shams/app/features/setting/view/getX/setting_controller.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class PrintWidget extends StatelessWidget {
   const PrintWidget({
@@ -51,7 +52,7 @@ class PrintWidget extends StatelessWidget {
   final ScreenshotController pinCodeScreenshotControllers;
   @override
   Widget build(BuildContext context) {
-    print('ussd=======>$ussd');
+    print('printDate=======>$printDate');
     final updateController = Get.find<UpdateController>();
     final user = updateController.userData.first;
     final settingController = Get.find<SettingController>();
@@ -213,27 +214,44 @@ class PrintWidget extends StatelessWidget {
           ),
           Visibility(
             visible: settingController.settings["printInformation"] ?? false,
-            child: Screenshot(
-              controller: footerScreenshotControllers,
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    removeHtmlTags(
-                      footerText,
+            child: footerText.isNotEmpty
+                ? Screenshot(
+                    controller: footerScreenshotControllers,
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Html(
+                          data: footerText,
+                          style: {
+                            "p": Style(
+                              fontSize: FontSize(16),
+                              color: Colors.black,
+                            ),
+                          },
+                        ),
+                        // child:
+                        //  Text(
+                        //   removeHtmlTags(
+                        //     footerText,
+                        //   ),
+                        //   style: const TextStyle(
+                        //     color: Colors.black,
+                        //     fontWeight: FontWeight.w700,
+                        //     fontSize: 18,
+                        //   ),
+                        //   textAlign: TextAlign.left,
+                        //   textDirection: TextDirection.ltr,
+                        // ),
+                      ),
                     ),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
+                  )
+                : Screenshot(
+                    controller: footerScreenshotControllers,
+                    child: const Divider(
+                      color: Colors.white,
                     ),
-                    textAlign: TextAlign.left,
-                    textDirection: TextDirection.ltr,
                   ),
-                ),
-              ),
-            ),
           ),
           const Gap(4),
         ],

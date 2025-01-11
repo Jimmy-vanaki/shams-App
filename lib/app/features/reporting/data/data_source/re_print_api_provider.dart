@@ -9,6 +9,7 @@ class RePrintApiProvider extends GetxController {
   var rePrintDataList = <RePrintModel>[].obs;
   late Dio dio;
   final rxRequestStatus = Status.initial.obs;
+  final RxBool reportPrint = false.obs;
 
   @override
   void onInit() {
@@ -54,12 +55,14 @@ class RePrintApiProvider extends GetxController {
         return false;
       } else {
         rxRequestStatus.value = Status.error;
+        Get.closeAllSnackbars();
         Get.snackbar('خطأ', response.data['error']);
         return false;
       }
     } catch (e) {
       print(e);
       rxRequestStatus.value = Status.error;
+      Get.closeAllSnackbars();
       Get.snackbar('خطأ', 'فشل في جلب البيانات.');
       return false;
     }

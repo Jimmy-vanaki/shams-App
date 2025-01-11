@@ -21,13 +21,12 @@ Future<void> init() async {
   if (Constants.userToken.isNotEmpty) {
     Constants.isLoggedIn = true;
     // updateController.isUpdating.value = true;
-    await updateController.updateInformation(Constants.userToken);
+    await updateController.updateInformation();
   }
   await [
     Permission.bluetooth,
     Permission.bluetoothScan,
     Permission.bluetoothAdvertise,
     Permission.bluetoothConnect,
-
   ].request();
 }

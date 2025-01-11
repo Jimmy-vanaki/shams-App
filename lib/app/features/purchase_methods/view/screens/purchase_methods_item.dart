@@ -37,6 +37,7 @@ class PurchaseMethodsItem extends StatelessWidget {
                     if (Constants.isLoggedIn) {
                       purchaseMethodsController.selectMethod(index: index);
                     }else{
+                      Get.closeAllSnackbars();
                       Get.snackbar('تنبيه', 'لاتمام عملية الشراء يرجى تسجيل الدخول');
                     }
                   },

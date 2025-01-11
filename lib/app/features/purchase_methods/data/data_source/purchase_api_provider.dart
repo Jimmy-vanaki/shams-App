@@ -12,6 +12,7 @@ class PurchaseApiProvider extends GetxController {
   var purchaseDataList = <PurchaseModel>[].obs;
   final errorMessage = ''.obs;
   final RxBool isProcessing = false.obs;
+  final UpdateController updateController = Get.find<UpdateController>();
   @override
   void onInit() {
     super.onInit();
@@ -55,14 +56,18 @@ class PurchaseApiProvider extends GetxController {
         purchaseDataList.clear();
         purchaseDataList.add(PurchaseModel.fromJson(response.data));
         rxRequestStatus.value = Status.completed;
-        final UpdateController updateController = Get.put(UpdateController());
-        await updateController.updateInformation(Constants.userToken);
+        //
+        // await updateController.updateInformation();
+        updateController.inventory.value = response.data['inventory'];
+        updateController.update();
+        print('1111printDate=======>${response.data['print_date']}');
         return true;
       } else if (response.statusCode == 401) {
         handleLogout(response.data['error']['message']);
         return false;
       } else {
-        errorMessage.value = response.data['errors'][0] ?? 'حاول مرة أخرى';
+        errorMessage.value = response.data?['errors']?[0] ?? 'حاول مرة أخرى';
+        Get.closeAllSnackbars();
         Get.snackbar('خطأ', errorMessage.value);
 
         rxRequestStatus.value = Status.error;
@@ -72,6 +77,7 @@ class PurchaseApiProvider extends GetxController {
       print(e);
       errorMessage.value = 'حاول مرة أخرى';
       rxRequestStatus.value = Status.error;
+      Get.closeAllSnackbars();
       Get.snackbar('خطأ', 'فشل في جلب البيانات.');
       return false;
     }

@@ -9,6 +9,7 @@ import 'package:shams/app/core/common/widgets/retry_widget.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
 import 'package:shams/app/features/home/data/data_source/products_api_provider.dart';
 import 'package:shams/app/features/home/view/getX/company_archive_controller.dart';
+import 'package:shams/app/features/reporting/data/data_source/re_print_api_provider.dart';
 import 'package:shams/app/features/reporting/data/data_source/report_list_api_provider.dart';
 import 'package:shams/app/features/reporting/view/getX/report_value_controller.dart';
 import 'package:shams/app/features/reporting/view/widgets/category_dropdown.dart';
@@ -21,6 +22,7 @@ class ReportingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     ReportListApiProvider reportListApiProvider =
         Get.put(ReportListApiProvider());
+    RePrintApiProvider rePrintApiProvider = Get.put(RePrintApiProvider());
     ReportValueController reportValueController =
         Get.put(ReportValueController());
     final CompanyArchiveController companyArchiveController =
@@ -115,42 +117,54 @@ class ReportingPage extends StatelessWidget {
                           ],
                         ),
                         const Gap(10),
-                        ElevatedButton(
-                          onPressed: () {
-                            reportListApiProvider.fetchReportData(
-                              productId:
-                                  reportValueController.selectedProduct.value,
-                              companyId:
-                                  reportValueController.selectedCompany.value,
-                              startDate: reportValueController.startDate.value,
-                              endDate: reportValueController.endDate.value,
-                            );
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svgs/paper-plane-top.svg',
-                                width: 20,
-                                height: 20,
-                                colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.onPrimary,
-                                  BlendMode.srcIn,
+                        Obx(
+                          () => ElevatedButton(
+                            onPressed: reportListApiProvider
+                                        .rxRequestButtonStatus.value ==
+                                    Status.loading
+                                ? null
+                                : () {
+                                    rePrintApiProvider.reportPrint.value = true;
+                                    reportListApiProvider.fetchReportData(
+                                      productId: reportValueController
+                                          .selectedProduct.value,
+                                      companyId: reportValueController
+                                          .selectedCompany.value,
+                                      startDate:
+                                          reportValueController.startDate.value,
+                                      endDate:
+                                          reportValueController.endDate.value,
+                                    );
+                                  },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svgs/paper-plane-top.svg',
+                                  width: 20,
+                                  height: 20,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onPrimary,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
-                              ),
-                              const Gap(10),
-                              const Text(
-                                'ارسال',
-                              ),
-                            ],
+                                const Gap(10),
+                                Text(
+                                  'ارسال',
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     )
                   : const OfflineWidget(),
             ),
-       
             const Gap(10),
             Obx(() {
               switch (reportListApiProvider.rxRequestStatus.value) {

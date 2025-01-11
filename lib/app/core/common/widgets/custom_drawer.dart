@@ -127,38 +127,42 @@ class CustomDrawer extends StatelessWidget {
         "title": 'خروج',
         "icon": 'sign-out-alt',
         "onTap": () {
-          Get.dialog(
-            AlertDialog(
-              title: const Text('تنبيه'),
-              content: const Text('هل تريد تسجيل الخروج من حسابك؟'),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: const Text(
-                    'لا',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+          if (Constants.isLoggedIn) {
+            Get.dialog(
+              AlertDialog(
+                title: const Text('تنبيه'),
+                content: const Text('هل تريد تسجيل الخروج من حسابك؟'),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text(
+                      'لا',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    logout();
-                  },
-                  child: const Text(
-                    'نعم',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                  ElevatedButton(
+                    onPressed: () {
+                      logout();
+                    },
+                    child: const Text(
+                      'نعم',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
+                ],
+              ),
+            );
+          } else {
+            Get.offAndToNamed(Routes.welcomePage);
+          }
         },
       },
     ];

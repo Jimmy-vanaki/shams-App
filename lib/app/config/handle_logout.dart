@@ -9,6 +9,7 @@ final updateController =
 
 void handleLogout(String message) {
   Constants.localStorage.remove('userToken');
+  Get.closeAllSnackbars();
   Get.snackbar('تنبيه', message);
   Get.offAllNamed(Routes.welcomePage);
   updateController?.isUpdating.value = false;

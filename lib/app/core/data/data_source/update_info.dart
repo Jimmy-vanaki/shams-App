@@ -5,7 +5,6 @@ import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/functions.dart';
 import 'package:shams/app/config/handle_logout.dart';
 import 'package:shams/app/core/data/models/update_info_model.dart';
-import 'package:shams/app/core/routes/routes.dart';
 
 class UpdateController extends GetxController {
   late Dio dio;
@@ -13,10 +12,14 @@ class UpdateController extends GetxController {
   final String token = Constants.userToken;
   var isUpdating = true.obs;
   String deviceId = '';
+  RxInt inventory = 000.obs;
+  var timerReset = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     dio = Dio();
+
     startAutoUpdate();
   }
 
@@ -28,21 +31,26 @@ class UpdateController extends GetxController {
 
   /// Starts the automatic update process
   void startAutoUpdate() {
+    timerReset.value = false;
     Future.doWhile(() async {
-      if (!isUpdating.value) return false;
-      await updateInformation(Constants.userToken);
-      await Future.delayed(const Duration(seconds: 10));
+      if (!isUpdating.value || timerReset.value) {
+        return false;
+      }
+      await updateInformation();
+      await Future.delayed(const Duration(seconds: 30));
       return isUpdating.value;
     });
   }
 
-  /// Stops the updating process
   void stopUpdating() {
     isUpdating.value = false;
+    timerReset.value = true;
+    dio.close(force: true);
   }
 
   /// Updates user information from the API
-  Future<bool> updateInformation(String token) async {
+  Future<bool> updateInformation() async {
+    print('Token: ${Constants.userToken}');
     try {
       isUpdating.value = true;
       deviceId = (await getId())!;
@@ -53,7 +61,7 @@ class UpdateController extends GetxController {
         },
         options: Options(
           headers: {
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Bearer ${Constants.userToken}',
             'Content-Type': 'application/json',
           },
         ),
@@ -70,6 +78,7 @@ class UpdateController extends GetxController {
 
         await _handleThemeChange(response);
         await _updateUserData(response);
+        inventory.value = response.data['user']['total_balance'];
         return true;
       } else if (response.statusCode == 401) {
         handleLogout(response.data['error']['message']);

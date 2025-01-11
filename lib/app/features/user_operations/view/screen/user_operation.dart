@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/functions.dart';
 import 'package:shams/app/config/status.dart';
@@ -107,8 +108,8 @@ class UserOperation extends StatelessWidget {
                                                 .colorScheme
                                                 .primary
                                                 .withAlpha(180)),
-                                                textDirection: TextDirection.ltr,
-                                                textAlign: TextAlign.left,
+                                        textDirection: TextDirection.ltr,
+                                        textAlign: TextAlign.left,
                                       ),
                                     ),
                                   ],
@@ -170,7 +171,11 @@ class UserOperation extends StatelessWidget {
 
   String formatDateTime(int timestamp) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-    return "${dateTime.year}/${dateTime.month}/${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}";
+
+    String formattedDate =
+        intl.DateFormat('yyyy/MM/dd hh:mm:ss a').format(dateTime);
+
+    return formattedDate;
   }
 
   Widget buildRowWithGap(String label, String? value) {

@@ -30,7 +30,7 @@ class Datum {
   CompanyTitle? companyTitle;
   int? numCount;
   int? serialCount;
-  DateTime? printDate;
+  String? printDate;
 
   Datum({
     required this.id,
@@ -63,9 +63,7 @@ class Datum {
             : null,
         numCount: json["num_count"],
         serialCount: json["serial_count"],
-        printDate: json["print_date"] == null
-            ? null
-            : DateTime.parse(json["print_date"]),
+        printDate: json['print_date'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -80,7 +78,7 @@ class Datum {
         "company_title": companyTitleValues.reverse[companyTitle],
         "num_count": numCount,
         "serial_count": serialCount,
-        "print_date": printDate?.toIso8601String(),
+        "print_date": printDate,
       };
 }
 

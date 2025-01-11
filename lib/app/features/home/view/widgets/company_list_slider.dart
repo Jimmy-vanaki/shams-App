@@ -31,11 +31,14 @@ class CompanyListSlider extends StatelessWidget {
         itemCount: min(companyList.first.companies.length, 10),
         itemBuilder: (BuildContext context, int index) => ZoomTapAnimation(
           onTap: () {
+            print(companyList.first.companies[index].id);
             companySliderController.currentCompany(
               index,
             );
-            productsApiProvider
-                .fetchProducts(companyList.first.companies[index].id);
+            companySliderController.activeCompany.value =
+                companyList.first.companies[index].id;
+            // productsApiProvider
+            //     .fetchProducts(companyList.first.companies[index].id);
           },
           child: Obx(
             () => AnimatedContainer(

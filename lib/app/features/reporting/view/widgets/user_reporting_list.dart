@@ -29,7 +29,7 @@ class USerReportingList extends StatelessWidget {
   final List<ReportModel> reportDataList;
   @override
   Widget build(BuildContext context) {
-    RePrintApiProvider rePrintApiProvider = Get.put(RePrintApiProvider());
+    RePrintApiProvider rePrintApiProvider = Get.find<RePrintApiProvider>();
     final BluetoothController bluetoothController =
         Get.put(BluetoothController(), permanent: true);
     final updateController = Get.find<UpdateController>();
@@ -65,61 +65,65 @@ class USerReportingList extends StatelessWidget {
               ),
               ZoomTapAnimation(
                 child: ElevatedButton.icon(
-                  onPressed: () async {
-                    final savedPrinter =
-                        Constants.localStorage.read('printAddres');
-                    if (savedPrinter != null) {
-                      bluetoothController.connectToDevice(
-                        savedPrinter['macAddress'],
-                        savedPrinter['name'],
-                      );
-                    }
-                    List<int>? headerBytes;
-                    List<int>? headerBytesli;
-                    final updateController = Get.find<UpdateController>();
-                    final user = updateController.userData.first;
-                    Uint8List? headerimageBytes =
-                        await headerScreenshotControllers.capture();
+                  onPressed: !rePrintApiProvider.reportPrint.value
+                      ? null
+                      : () async {
+                          rePrintApiProvider.reportPrint.value = false;
+                          final savedPrinter =
+                              Constants.localStorage.read('printAddres');
+                          if (savedPrinter != null) {
+                            bluetoothController.connectToDevice(
+                              savedPrinter['macAddress'],
+                              savedPrinter['name'],
+                            );
+                          }
+                          List<int>? headerBytes;
+                          List<int>? headerBytesli;
+                          final updateController = Get.find<UpdateController>();
+                          final user = updateController.userData.first;
+                          Uint8List? headerimageBytes =
+                              await headerScreenshotControllers.capture();
 
-                    Uint8List imageBytes = await loadImageFromAssets(
-                        'assets/images/logo_reports.jpg');
-                    headerBytes = await processImageForPrinter(imageBytes);
-                    headerBytesli =
-                        await processImageForPrinter(headerimageBytes!);
-                    String terminalId =
-                        '${reportValueController.startDate.value}<-->${reportValueController.endDate.value} \n Terminal ID : ${user.user?.id ?? ''}\n----------------------';
-                    Uint8List byteArray =
-                        Uint8List.fromList(utf8.encode(terminalId));
-                    final byteList = byteArray.toList();
-                    try {
-                      if (headerBytes != null) {
-                        PrintBluetoothThermal.writeBytes(headerBytes);
-                      }
-                      if (headerBytesli != null) {
-                        PrintBluetoothThermal.writeBytes(headerBytesli);
-                      }
-                      await PrintBluetoothThermal.writeBytes(byteList);
-                    } catch (e) {
-                      print('Failed to print Terminal ID: $e');
-                      return;
-                    }
+                          Uint8List imageBytes = await loadImageFromAssets(
+                              'assets/images/logo_reports.jpg');
+                          headerBytes =
+                              await processImageForPrinter(imageBytes);
+                          headerBytesli =
+                              await processImageForPrinter(headerimageBytes!);
+                          String terminalId =
+                              '${reportValueController.startDate.value}<-->${reportValueController.endDate.value} \n Terminal ID : ${user.user?.id ?? ''}\n----------------------';
+                          Uint8List byteArray =
+                              Uint8List.fromList(utf8.encode(terminalId));
+                          final byteList = byteArray.toList();
+                          try {
+                            if (headerBytes != null) {
+                              PrintBluetoothThermal.writeBytes(headerBytes);
+                            }
+                            if (headerBytesli != null) {
+                              PrintBluetoothThermal.writeBytes(headerBytesli);
+                            }
+                            await PrintBluetoothThermal.writeBytes(byteList);
+                          } catch (e) {
+                            print('Failed to print Terminal ID: $e');
+                            return;
+                          }
 
-                    for (var serial in serials.first.serials) {
-                      final byteList = await buildPrintString(
-                        cardTitle: serial.title,
-                        printDate: serial.printDate,
-                        serialList: [serial],
-                      );
+                          for (var serial in serials.first.serials) {
+                            final byteList = await buildPrintString(
+                              cardTitle: serial.title,
+                              printDate: serial.printDate,
+                              serialList: [serial],
+                            );
 
-                      try {
-                        await PrintBluetoothThermal.writeBytes(byteList);
-                      } catch (e) {
-                        print('Failed to print serial: $e');
-                      }
-                    }
+                            try {
+                              await PrintBluetoothThermal.writeBytes(byteList);
+                            } catch (e) {
+                              print('Failed to print serial: $e');
+                            }
+                          }
 
-                    print('All serials printed successfully!');
-                  },
+                          print('All serials printed successfully!');
+                        },
                   label: const Text('طباعة'),
                   icon: SvgPicture.asset(
                     'assets/svgs/print.svg',
@@ -142,7 +146,7 @@ class USerReportingList extends StatelessWidget {
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
             padding:
-                const EdgeInsets.only(bottom: 90, top: 0, left: 20, right: 20),
+                const EdgeInsets.only(bottom: 150, top: 0, left: 20, right: 20),
             itemCount: serials.first.serials.length,
             itemBuilder: (context, index) {
               PurchaseMethodsController purchaseMethodsController =
@@ -251,26 +255,49 @@ class USerReportingList extends StatelessWidget {
                                                 ussdCodes: [
                                                   UssdCode(
                                                       code: rePrintApiProvider
-                                                          .rePrintDataList
-                                                          .first
-                                                          .ussdCode)
+                                                              .rePrintDataList
+                                                              .first
+                                                              .ussdCode ??
+                                                          '',
+                                                      id: -1)
                                                 ],
                                                 footer: rePrintApiProvider
+                                                            .rePrintDataList
+                                                            .first
+                                                            .cardDetails2
+                                                            ?.cardFooter
+                                                            ?.isEmpty ??
+                                                        true
+                                                    ? (rePrintApiProvider
+                                                                .rePrintDataList
+                                                                .first
+                                                                .cardDetails
+                                                                ?.cardFooter
+                                                                ?.isEmpty ??
+                                                            true
+                                                        ? ''
+                                                        : rePrintApiProvider
+                                                            .rePrintDataList
+                                                            .first
+                                                            .cardDetails!
+                                                            .cardFooter!)
+                                                    : rePrintApiProvider
                                                         .rePrintDataList
                                                         .first
-                                                        .cardDetails
-                                                        ?.cardFooter ??
-                                                    '',
+                                                        .cardDetails2!
+                                                        .cardFooter!,
                                                 isReported: true,
                                               );
                                             }
                                           },
                                         );
                                       } else {
+                                        Get.closeAllSnackbars();
                                         Get.snackbar('تنبيه',
                                             'تجاوزت الحد الاقصى لعدد مرات تكرار الخدمة!');
                                       }
                                     } else {
+                                      Get.closeAllSnackbars();
                                       // Show a snackbar if the reprint limit is exceeded
                                       Get.snackbar('تنبيه',
                                           'تجاوزت الحد الاقصى لعدد مرات تكرار الخدمة!');

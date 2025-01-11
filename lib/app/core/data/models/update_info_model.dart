@@ -3,18 +3,13 @@ class UpdateInfoModel {
   User? user;
   String? totalSales;
   int? loggedIn;
-  String? namePhotoUrl;
-  List<Company>? companies;
-  List<AsiacellCategory>? asiacellCategories;
+
 
   UpdateInfoModel({
     this.status,
     this.user,
     this.totalSales,
     this.loggedIn,
-    this.namePhotoUrl,
-    this.companies,
-    this.asiacellCategories,
   });
 
   factory UpdateInfoModel.fromJson(Map<String, dynamic> json) =>
@@ -23,15 +18,6 @@ class UpdateInfoModel {
         user: json["user"] == null ? null : User.fromJson(json["user"]),
         totalSales: json["total_sales"],
         loggedIn: json["logged_in"],
-        namePhotoUrl: json["name_photo_url"],
-        companies: json["companies"] == null
-            ? null
-            : List<Company>.from(
-                json["companies"].map((x) => Company.fromJson(x))),
-        asiacellCategories: json["asiacell_categories"] == null
-            ? null
-            : List<AsiacellCategory>.from(json["asiacell_categories"]
-                .map((x) => AsiacellCategory.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,99 +25,9 @@ class UpdateInfoModel {
         "user": user?.toJson(),
         "total_sales": totalSales,
         "logged_in": loggedIn,
-        "name_photo_url": namePhotoUrl,
-        "companies": companies == null
-            ? null
-            : List<dynamic>.from(companies!.map((x) => x.toJson())),
-        "asiacell_categories": asiacellCategories == null
-            ? null
-            : List<dynamic>.from(asiacellCategories!.map((x) => x.toJson())),
+
       };
 }
-
-class AsiacellCategory {
-  int? id;
-  int? parentId;
-  Type? type;
-  String? title;
-  int? price;
-  String? img; // New field for img
-  String? description;
-  int? show2Site;
-  int? idShow;
-  String? photoUrl; // New field for photo_url
-  AgentPrice? agentPrice;
-
-  AsiacellCategory({
-    this.id,
-    this.parentId,
-    this.type,
-    this.title,
-    this.price,
-    this.img, // Initialize img field
-    this.description,
-    this.show2Site,
-    this.idShow,
-    this.photoUrl, // Initialize photoUrl field
-    this.agentPrice,
-  });
-
-  factory AsiacellCategory.fromJson(Map<String, dynamic> json) =>
-      AsiacellCategory(
-        id: json["id"],
-        parentId: json["parent_id"],
-        type: json["type"] == null ? null : typeValues.map[json["type"]],
-        title: json["title"],
-        price: json["price"],
-        img: json["img"], // Parse img from JSON
-        description: json["description"],
-        show2Site: json["show2site"],
-        idShow: json["id_show"],
-        photoUrl: json["photo_url"], // Parse photo_url from JSON
-        agentPrice: json["agent_price"] == null
-            ? null
-            : AgentPrice.fromJson(json["agent_price"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "parent_id": parentId,
-        "type": type == null ? null : typeValues.reverse[type],
-        "title": title,
-        "price": price,
-        "img": img, // Include img in toJson
-        "description": description,
-        "show2site": show2Site,
-        "id_show": idShow,
-        "photo_url": photoUrl, // Include photo_url in toJson
-        "agent_price": agentPrice?.toJson(),
-      };
-}
-
-class AgentPrice {
-  int? price;
-  int? cardCategoryId;
-
-  AgentPrice({
-    this.price,
-    this.cardCategoryId,
-  });
-
-  factory AgentPrice.fromJson(Map<String, dynamic> json) => AgentPrice(
-        price: json["price"],
-        cardCategoryId: json["card_category_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "price": price,
-        "card_category_id": cardCategoryId,
-      };
-}
-
-enum Type { BILL, BUNDLE, TOPUP }
-
-final typeValues =
-    EnumValues({"bill": Type.BILL, "bundle": Type.BUNDLE, "topup": Type.TOPUP});
 
 class Company {
   int? id;
@@ -421,16 +317,4 @@ class Agent {
         "max_reprints": maxReprints,
         "supportText": supportText,
       };
-}
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

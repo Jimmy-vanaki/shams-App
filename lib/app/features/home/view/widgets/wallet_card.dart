@@ -6,6 +6,7 @@ import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/functions.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/purchase_methods/data/data_source/purchase_api_provider.dart';
 
 class WalletCard extends StatelessWidget {
   const WalletCard({
@@ -15,6 +16,9 @@ class WalletCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final UpdateController updateController = Get.find<UpdateController>();
+    // final PurchaseApiProvider purchaseApiProvider =
+    //     Get.find<PurchaseApiProvider>();
+
     return Obx(
       () {
         if (updateController.userData.isEmpty) {
@@ -89,15 +93,15 @@ class WalletCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text(
-                    formatNumber(user.user?.totalBalance ?? 000) ?? '',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  Obx(() => Text(
+                        formatNumber(updateController.inventory.value) ?? '',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      )),
                   Expanded(
                     child: Text(
                       '    IQD',

@@ -65,7 +65,7 @@ class SinginApiProvider extends GetxController {
         updateController.resumeUpdating();
         Constants.localStorage
             .write('userInfo', {'userName': username, 'password': password});
-        await updateController.updateInformation(Constants.userToken).then(
+        await updateController.updateInformation().then(
           (isSuccess) {
             if (isSuccess) {
               rxRequestStatus.value = Status.completed;

@@ -53,11 +53,13 @@ class NotifApiProvider extends GetxController {
         handleLogout(response.data['error']['message']);
       } else {
         rxRequestStatus.value = Status.error;
+        Get.closeAllSnackbars();
         Get.snackbar('خطأ', 'فشل في جلب البيانات.');
       }
     } catch (e) {
       print(e);
       rxRequestStatus.value = Status.error;
+      Get.closeAllSnackbars();
       Get.snackbar('خطأ', 'فشل في جلب البيانات.');
     }
   }

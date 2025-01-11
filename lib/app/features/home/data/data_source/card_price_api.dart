@@ -9,11 +9,17 @@ class CardPriceApi extends GetxController {
   late Dio dio;
   final rxRequestStatus = Status.initial.obs;
   var cardPriceData = <CardPriceModel>[].obs;
-  
+
   @override
   void onInit() {
     super.onInit();
-    dio = Dio();
+
+    dio = Dio(BaseOptions(
+      receiveTimeout: const Duration(milliseconds: 5000),
+      validateStatus: (status) {
+        return status! < 500;
+      },
+    ));
   }
 
   Future fetchCardPrice({required String cardId}) async {
@@ -32,6 +38,8 @@ class CardPriceApi extends GetxController {
           },
         ),
       );
+      print(response.statusCode);
+
       print('-================${response.data['card_price']}');
       if (response.statusCode == 200) {
         rxRequestStatus.value = Status.completed;
@@ -41,11 +49,13 @@ class CardPriceApi extends GetxController {
         handleLogout(response.data['error']['message']);
       } else {
         rxRequestStatus.value = Status.error;
+        Get.closeAllSnackbars();
         Get.snackbar('خطأ', 'فشل في جلب البيانات.');
       }
     } catch (e) {
       print(e);
       rxRequestStatus.value = Status.error;
+      Get.closeAllSnackbars();
       Get.snackbar('خطأ', 'فشل في جلب البيانات.');
     }
   }

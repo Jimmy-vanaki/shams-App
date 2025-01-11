@@ -9,7 +9,7 @@ class PurchaseModel {
   CardCategory? cardCategory;
   CardDetails? cardDetails;
   CardDetails? cardDetails2;
-  DateTime? printDate;
+  String? printDate;
 
   PurchaseModel({
     this.status,
@@ -47,9 +47,7 @@ class PurchaseModel {
         cardDetails2: json["card_details2"] == null
             ? null
             : CardDetails.fromJson(json["card_details2"]),
-        printDate: json["print_date"] == null
-            ? null
-            : DateTime.parse(json["print_date"]),
+        printDate: json["print_date"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -67,7 +65,7 @@ class PurchaseModel {
         "card_category": cardCategory?.toJson(),
         "card_details": cardDetails?.toJson(),
         "card_details2": cardDetails2?.toJson(),
-        "print_date": printDate?.toIso8601String(),
+        "print_date": printDate,
       };
 }
 

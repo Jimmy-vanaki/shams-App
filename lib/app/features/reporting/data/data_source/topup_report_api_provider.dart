@@ -8,10 +8,14 @@ import 'package:shams/app/features/reporting/data/models/topup_report_model.dart
 class TopupReportApiProvider extends GetxController {
   var reportDataList = <TopupReportModel>[].obs;
   late Dio dio;
-  final rxRequestStatus = Status.initial.obs;
+
+  late Rx<Status> rxRequestStatus;
+  late Rx<Status> rxRequestButtonStatus;
   @override
   void onInit() {
     super.onInit();
+    rxRequestStatus = Status.initial.obs;
+    rxRequestButtonStatus = Status.initial.obs;
     dio = Dio(BaseOptions(
       receiveTimeout: const Duration(milliseconds: 10000),
     ));
@@ -22,6 +26,7 @@ class TopupReportApiProvider extends GetxController {
     required String endDate,
   }) async {
     rxRequestStatus.value = Status.loading;
+    rxRequestButtonStatus.value = Status.loading;
     try {
       final response = await dio.post(
         "${Constants.baseUrl}/asiacell_transaction_list",
@@ -38,18 +43,22 @@ class TopupReportApiProvider extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        rxRequestStatus.value = Status.completed;
         reportDataList.clear();
         reportDataList.add(TopupReportModel.fromJson(response.data));
+        rxRequestStatus.value = Status.completed;
+        await Future.delayed(const Duration(seconds: 2));
+        rxRequestButtonStatus.value = Status.completed;
       } else if (response.statusCode == 401) {
         handleLogout(response.data['error']['message']);
       } else {
         rxRequestStatus.value = Status.error;
+        Get.closeAllSnackbars();
         Get.snackbar('خطأ', 'فشل في جلب البيانات.');
       }
     } catch (e) {
       print(e);
       rxRequestStatus.value = Status.error;
+      Get.closeAllSnackbars();
       Get.snackbar('خطأ', 'فشل في جلب البيانات.');
     }
   }

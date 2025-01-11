@@ -43,6 +43,8 @@ class BluetoothPage extends StatelessWidget {
       Get.put(BluetoothController(), permanent: true);
   @override
   Widget build(BuildContext context) {
+
+    print('printDate=======>$printDate');
     bluetoothController.printed.value = false;
     SettingController settingController = Get.put(SettingController());
     final updateController = Get.find<UpdateController>();

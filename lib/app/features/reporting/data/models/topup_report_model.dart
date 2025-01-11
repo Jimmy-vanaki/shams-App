@@ -32,6 +32,7 @@ class Transaction {
   String status;
   DateTime createdAt;
   DateTime updatedAt;
+  String? createdAtFormatted;
 
   Transaction({
     required this.id,
@@ -45,6 +46,7 @@ class Transaction {
     required this.status,
     required this.createdAt,
     required this.updatedAt,
+    this.createdAtFormatted,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
@@ -57,6 +59,7 @@ class Transaction {
         price: json["price"],
         mobile: json["mobile"],
         status: json["status"],
+        createdAtFormatted: json["created_at_formatted"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
@@ -71,6 +74,7 @@ class Transaction {
         "price": price,
         "mobile": mobile,
         "status": status,
+        "created_at_formatted": createdAtFormatted,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
       };

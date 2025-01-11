@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
-import 'package:shams/app/core/data/models/update_info_model.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
+import 'package:shams/app/features/home/data/models/home_model.dart';
 
 class InternetPackagesController extends GetxController {
-  final updateController = Get.find<UpdateController>();
+  final homeApiProvider = Get.find<HomeApiProvider>();
 
   final RxList<dynamic> companyList = RxList<dynamic>();
   final RxList<dynamic> packageList = [].obs;
@@ -13,8 +13,8 @@ class InternetPackagesController extends GetxController {
   void onInit() {
     super.onInit();
     companyList.assignAll(
-      updateController.userData.first.asiacellCategories
-          !.where((category) =>
+      homeApiProvider.homeDataList.first.asiacellCategories!
+          .where((category) =>
               category.type == Type.BUNDLE && category.parentId == null)
           .map((category) => category.toJson())
           .toList(),
@@ -28,8 +28,8 @@ class InternetPackagesController extends GetxController {
 
   buildPackageList(int index) {
     packageList.assignAll(
-      updateController.userData.first.asiacellCategories
-          !.where((category) =>
+      homeApiProvider.homeDataList.first.asiacellCategories!
+          .where((category) =>
               category.type == Type.BUNDLE && category.parentId == index)
           .map((category) => category.toJson())
           .toList(),
