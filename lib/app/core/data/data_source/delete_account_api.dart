@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/handle_logout.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
+import 'package:shams/app/core/common/widgets/exit_dialog.dart';
 import 'package:shams/app/core/routes/routes.dart';
 
 final Dio dio = Dio(BaseOptions(
@@ -11,7 +11,6 @@ final Dio dio = Dio(BaseOptions(
     return status! < 500;
   },
 ));
-final UpdateController updateController = Get.find<UpdateController>();
 
 Future<void> deleteAccount() async {
   try {
@@ -26,7 +25,6 @@ Future<void> deleteAccount() async {
     );
 
     if (response.statusCode == 200) {
-      updateController.stopUpdating;
       Constants.localStorage.remove('userToken');
       Get.closeAllSnackbars();
       Get.snackbar('تنبيه', 'تم تسجيل الخروج بنجاح');
@@ -34,8 +32,12 @@ Future<void> deleteAccount() async {
     } else if (response.statusCode == 401) {
       handleLogout(response.data['error']['message']);
     } else {
-      Get.closeAllSnackbars();
-      Get.snackbar('تنبيه', 'لم يتم تسجيل الخروج، يرجى اعادة المحاولة!');
+      if ((response.data?['logged_in'] ?? 1) == 0) {
+        exitDialog(response.data['errors'][0]);
+      } else {
+        Get.closeAllSnackbars();
+        Get.snackbar('تنبيه', 'لم يتم تسجيل الخروج، يرجى اعادة المحاولة!');
+      }
     }
   } catch (e) {
     Get.closeAllSnackbars();

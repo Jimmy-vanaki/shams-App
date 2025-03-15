@@ -11,6 +11,7 @@ import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/extensions/success_color_theme.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
 import 'package:shams/app/features/home/data/data_source/card_price_api.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/home/view/getX/company_slider_controller.dart';
 import 'package:shams/app/features/purchase_methods/data/data_source/purchase_api_provider.dart';
 import 'package:shams/app/features/home/data/models/product_model.dart';
@@ -27,9 +28,8 @@ class ProductsList extends StatelessWidget {
   final List products;
   @override
   Widget build(BuildContext context) {
-    String cardPricestr = '';
-    final updateController = Get.isRegistered<UpdateController>()
-        ? Get.find<UpdateController>()
+    final updateController = Get.isRegistered<HomeApiProvider>()
+        ? Get.find<HomeApiProvider>()
         : null;
     final CompanySliderController companySliderController =
         Get.put(CompanySliderController());
@@ -47,12 +47,14 @@ class ProductsList extends StatelessWidget {
             Get.put(CardPriceApi(), tag: index.toString());
         return ZoomTapAnimation(
           onTap: () {
+            String cardPricestr = '';
             if (!companySliderController.isLoading.value) {
               companySliderController.isLoading.value = true;
               cardPriceApi
                   .fetchCardPrice(cardId: products[index].id.toString())
                   .then(
                 (_) {
+                  companySliderController.isLoading.value = false;
                   cardPricestr =
                       cardPriceApi.cardPriceData.first.cardPrice.toString();
                   showModalBottomSheet(
@@ -251,7 +253,7 @@ class ProductsList extends StatelessWidget {
                                               );
                                             },
                                             childCount: updateController!
-                                                    .userData
+                                                    .homeDataList
                                                     .first
                                                     .user
                                                     ?.agent
@@ -522,6 +524,9 @@ class ProductsList extends StatelessWidget {
                                                                             : purchaseApiProvider.purchaseDataList.first.cardDetails2!.cardFooter!,
                                                                         isReported:
                                                                             false,
+                                                                        cardId:
+                                                                            purchaseApiProvider.purchaseDataList.first.cardCategory?.id?.toString() ??
+                                                                                '',
                                                                       );
                                                                     }
                                                                   }).catchError(

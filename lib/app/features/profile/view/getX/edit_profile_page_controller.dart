@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 
 class EditProfilePageController extends GetxController {
-  final updateController = Get.find<UpdateController>();
+  final updateController = Get.find<HomeApiProvider>();
   final RxBool isPasswordHidden = true.obs;
   final RxBool isPasswordHiddenConfirm = true.obs;
   RxString networkImageUrl = ''.obs;
@@ -21,8 +22,8 @@ class EditProfilePageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if (updateController.userData.isNotEmpty) {
-      final user = updateController.userData.first;
+    if (updateController.homeDataList.isNotEmpty) {
+      final user = updateController.homeDataList.first;
       networkImageUrl.value = user.user?.photoUrl ?? '';
     } else {
       networkImageUrl = ''.obs;

@@ -37,7 +37,9 @@ class SettingPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
-                      (settingController.settings["darkMode"] ?? false) ? 'داکن' : 'فاتح',
+                      (settingController.settings["darkMode"] ?? false)
+                          ? 'داکن'
+                          : 'فاتح',
                       style: const TextStyle(
                         fontSize: 16,
                       ),
@@ -168,6 +170,32 @@ class SettingPage extends StatelessWidget {
                 value: settingController.settings["printInformation"],
                 onChanged: (newValue) {
                   settingController.saveSetting("printInformation", newValue!);
+                },
+              )),
+          Obx(() => CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svgs/bullet.svg',
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary,
+                        BlendMode.srcIn,
+                      ),
+                      width: 18,
+                      height: 18,
+                    ),
+                    const Text(
+                      'باركود الفئات',
+                      style: TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+                value: settingController.settings["printBarCode"] ?? false,
+                onChanged: (newValue) {
+                  settingController.saveSetting("printBarCode", newValue!);
                 },
               )),
           const Gap(10),

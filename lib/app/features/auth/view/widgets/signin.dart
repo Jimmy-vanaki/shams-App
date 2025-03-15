@@ -132,17 +132,21 @@ class Signin extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          if (formKey.currentState!.validate()) {
-                            singinApiProvider.login(
-                              username:
-                                  singinApiProvider.usernameController.text,
-                              password:
-                                  singinApiProvider.passwordController.text,
-                            );
-                          }
-                        },
+                        onPressed:
+                            singinApiProvider.rxRequestButtonStatus.value ==
+                                    Status.loading
+                                ? null
+                                : () {
+                                    FocusScope.of(context).unfocus();
+                                    if (formKey.currentState!.validate()) {
+                                      singinApiProvider.login(
+                                        username: singinApiProvider
+                                            .usernameController.text,
+                                        password: singinApiProvider
+                                            .passwordController.text,
+                                      );
+                                    }
+                                  },
                         child: Obx(
                           () {
                             switch (singinApiProvider.rxRequestStatus.value) {

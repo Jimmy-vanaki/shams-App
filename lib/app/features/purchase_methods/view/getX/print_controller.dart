@@ -35,8 +35,10 @@ class BluetoothController extends GetxController {
 
       // Notify user about the Bluetooth status
       if (!isBluetoothOn) {
+        Get.closeAllSnackbars();
         Get.snackbar("خطأ", "تعذر تشغيل البلوتوث.");
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar("نجاح", "تم تشغيل البلوتوث بنجاح.");
         startScan();
       }
@@ -72,14 +74,17 @@ class BluetoothController extends GetxController {
 
       // Show a notification based on the scan results
       if (devicesList.isEmpty) {
+        Get.closeAllSnackbars();
         Get.snackbar(
             "لم يتم العثور على أجهزة", "لم يتم العثور على أي جهاز بلوتوث.");
       } else {
+        Get.closeAllSnackbars();
         Get.snackbar("تم العثور على أجهزة",
             "تم العثور على ${devicesList.length} أجهزة.");
       }
     } catch (e) {
       isLoading.value = false; // Stop loading indicator on error
+      Get.closeAllSnackbars();
       Get.snackbar("خطا", "مشکلی در اسکن دستگاه‌های بلوتوث رخ داد: $e");
     }
   }
@@ -98,8 +103,10 @@ class BluetoothController extends GetxController {
       deviceName.value = advName;
       // connectedDevice.value = device;
       isConnected.value = true;
+      Get.closeAllSnackbars();
       Get.snackbar("تم الاتصال", "تم الاتصال بـ $advName بنجاح.");
     } catch (e) {
+      Get.closeAllSnackbars();
       Get.snackbar("خطأ", "فشل الاتصال بـ $advName: $e");
     }
   }
@@ -107,6 +114,7 @@ class BluetoothController extends GetxController {
   // Disconnect from the current Bluetooth device
   Future<void> disconnectDevice() async {
     Constants.localStorage.remove('printAddres');
+    Get.closeAllSnackbars();
     Get.snackbar("تم قطع الاتصال", "تم قطع الاتصال مع الجهاز.");
     isConnected.value = false;
   }

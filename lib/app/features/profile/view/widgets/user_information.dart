@@ -6,6 +6,7 @@ import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/data/data_source/delete_account_api.dart';
 import 'package:shams/app/core/data/data_source/logout_api_provider.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 
 class USerInformationWidget extends StatelessWidget {
   const USerInformationWidget({
@@ -16,8 +17,8 @@ class USerInformationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () {
-        final updateController = Get.find<UpdateController>();
-        final user = updateController.userData.first;
+        final updateController = Get.find<HomeApiProvider>();
+        final user = updateController.homeDataList.first;
         final List<Map<String, dynamic>> userInformations = [
           {
             "icon": 'envelope-open',

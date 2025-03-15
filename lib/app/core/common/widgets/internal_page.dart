@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:shams/app/features/purchase_methods/view/getX/print_controller.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class InternalPage extends StatelessWidget {
   const InternalPage({
     super.key,
     required this.customWidget,
     required this.title,
+    this.disconnect = false,
   });
   final Widget customWidget;
   final String title;
+  final bool disconnect;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,32 +24,58 @@ class InternalPage extends StatelessWidget {
         titleSpacing: 0,
         title: Align(
           alignment: Alignment.centerLeft,
-          child: IconButton(
-            onPressed: () {
-              print('object');
-              Get.back();
-            },
-            icon: SvgPicture.asset(
-              'assets/svgs/angle-left.svg',
-              colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.onPrimary,
-                BlendMode.srcIn,
+          child: Row(
+            children: [
+              const Spacer(),
+              disconnect
+                  ? ZoomTapAnimation(
+                      onTap: () {
+                        final BluetoothController bluetoothController =
+                            Get.find<BluetoothController>();
+                        bluetoothController.disconnectDevice();
+                      },
+                      child: SvgPicture.asset(
+                        'assets/svgs/signal-stream-slash.svg',
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.onPrimary,
+                          BlendMode.srcIn,
+                        ),
+                        width: 20,
+                        height: 20,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              const Gap(20),
+              IconButton(
+                onPressed: () {
+                  print('object');
+                  Get.back();
+                },
+                icon: SvgPicture.asset(
+                  'assets/svgs/angle-left.svg',
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.onPrimary,
+                    BlendMode.srcIn,
+                  ),
+                  width: 20,
+                  height: 20,
+                ),
               ),
-              width: 20,
-              height: 20,
-            ),
+            ],
           ),
         ),
         leading: const SizedBox(),
         flexibleSpace: Align(
           alignment: Alignment.centerRight,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 20, top: 25),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontSize: 17,
+          child: Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20, top: 25),
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 17,
+                ),
               ),
             ),
           ),

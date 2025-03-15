@@ -3,6 +3,7 @@ import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/handle_logout.dart';
 import 'package:shams/app/config/status.dart';
 import 'package:dio/dio.dart';
+import 'package:shams/app/core/common/widgets/exit_dialog.dart';
 import 'package:shams/app/features/reporting/data/models/re_print_model.dart';
 
 class RePrintApiProvider extends GetxController {
@@ -54,9 +55,13 @@ class RePrintApiProvider extends GetxController {
         handleLogout(response.data['error']['message']);
         return false;
       } else {
-        rxRequestStatus.value = Status.error;
-        Get.closeAllSnackbars();
-        Get.snackbar('خطأ', response.data['error']);
+        if ((response.data?['logged_in'] ?? 1) == 0) {
+          exitDialog(response.data['errors'][0]);
+        } else {
+          rxRequestStatus.value = Status.error;
+          Get.closeAllSnackbars();
+          Get.snackbar('خطأ', response.data['error']);
+        }
         return false;
       }
     } catch (e) {

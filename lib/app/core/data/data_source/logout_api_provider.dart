@@ -2,11 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/handle_logout.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/routes/routes.dart';
 
 final Dio dio = Dio(BaseOptions());
-final UpdateController updateController = Get.find<UpdateController>();
+
 
 Future<void> logout() async {
   try {
@@ -21,7 +20,7 @@ Future<void> logout() async {
     );
 
     if (response.statusCode == 200) {
-      updateController.stopUpdating;
+    
       Constants.localStorage.remove('userToken');
       Get.closeAllSnackbars();
       Get.snackbar('تنبيه', 'تم تسجيل الخروج بنجاح');

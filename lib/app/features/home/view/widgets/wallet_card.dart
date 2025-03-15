@@ -6,6 +6,7 @@ import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/functions.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/purchase_methods/data/data_source/purchase_api_provider.dart';
 
 class WalletCard extends StatelessWidget {
@@ -15,18 +16,18 @@ class WalletCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UpdateController updateController = Get.find<UpdateController>();
+    final HomeApiProvider updateController = Get.find<HomeApiProvider>();
     // final PurchaseApiProvider purchaseApiProvider =
     //     Get.find<PurchaseApiProvider>();
 
     return Obx(
       () {
-        if (updateController.userData.isEmpty) {
+        if (updateController.homeDataList.isEmpty) {
           return const Center(
             child: CustomLoading(),
           );
         }
-        final user = updateController.userData.first;
+        final user = updateController.homeDataList.first;
 
         return Container(
           height: 200,

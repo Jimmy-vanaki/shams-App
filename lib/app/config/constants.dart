@@ -3,7 +3,7 @@ import 'package:get_storage/get_storage.dart';
 
 class Constants {
   static const String appTitle = 'Shams';
-  static const String baseUrl = "https://alshams-co.com/api/v8";
+  static const String baseUrl = "http://alshams-co.net/api/v1";
 
   static final GetStorage localStorage = GetStorage();
   static String userToken = '';

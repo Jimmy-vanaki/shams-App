@@ -1,21 +1,20 @@
 import 'dart:io';
 
-import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_sms/flutter_sms.dart';
+// import 'package:flutter_sms/flutter_sms.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/core/common/constants/dashed_border.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/routes/routes.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/purchase_methods/view/screens/bluetooth_page.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Future<void> manageMethods({
   required int type,
@@ -26,9 +25,10 @@ Future<void> manageMethods({
   required String printDate,
   required String title,
   required String footer,
+  required String cardId,
   required bool isReported,
 }) async {
-  final updateController = Get.find<UpdateController>();
+  final updateController = Get.find<HomeApiProvider>();
   String generatePinCodes() {
     final StringBuffer buffer = StringBuffer();
     if (serials?.first.code != null) {
@@ -50,7 +50,7 @@ Future<void> manageMethods({
     }
 
     buffer.writeln(
-        'أرسل بواسطة: ${updateController.userData.first.user?.name ?? ''}');
+        'أرسل بواسطة: ${updateController.homeDataList.first.user?.name ?? ''}');
     return buffer.toString();
   }
 
@@ -86,6 +86,7 @@ Future<void> manageMethods({
           cardTitle: cardTitle,
           footer: footer,
           isReported: isReported,
+          cardId: cardId,
         ),
       );
       break;
@@ -105,7 +106,7 @@ Future<void> manageMethods({
         await Share.shareXFiles(
           [xFile],
           text:
-              'أرسل بواسطة: ${updateController.userData.first.user?.name ?? ''}',
+              'أرسل بواسطة: ${updateController.homeDataList.first.user?.name ?? ''}',
         );
       }
       // Implement screenshot functionality
@@ -253,7 +254,9 @@ Future<void> manageMethods({
       break;
 
     case 5: // SMS
-      _sendSMS(generatePinCodes(), []);
+      _sendSMS(
+        generatePinCodes(),
+      );
       break;
 
     default:
@@ -261,15 +264,34 @@ Future<void> manageMethods({
   }
 }
 
-Future<void> _callNumber(String ussd) async {
-  await FlutterPhoneDirectCaller.callNumber(ussd);
+// Future<void> _callNumber(String ussd) async {
+//   await FlutterPhoneDirectCaller.callNumber(ussd);
+// }
+
+Future<void> _callNumber(String phoneNumber) async {
+  final Uri callUri = Uri(scheme: 'tel', path: phoneNumber);
+  if (await canLaunchUrl(callUri)) {
+    await launchUrl(callUri);
+  } else {
+    throw 'Could not launch $callUri';
+  }
 }
 
-void _sendSMS(String message, List<String> recipients) async {
-  try {
-    String result = await sendSMS(message: message, recipients: recipients);
-    debugPrint(result);
-  } catch (error) {
-    debugPrint("Error sending SMS: $error");
+// void _sendSMS(String message, List<String> recipients) async {
+//   try {
+//     String result = await sendSMS(message: message, recipients: recipients);
+//     debugPrint(result);
+//   } catch (error) {
+//     debugPrint("Error sending SMS: $error");
+//   }
+// }
+
+void _sendSMS(String message) async {
+  final Uri smsUri = Uri.parse("sms:?body=${Uri.encodeComponent(message)}");
+
+  if (await canLaunchUrl(smsUri)) {
+    await launchUrl(smsUri);
+  } else {
+    print("Could not launch SMS app");
   }
 }

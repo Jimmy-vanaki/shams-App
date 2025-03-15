@@ -12,8 +12,8 @@ import 'package:shams/app/config/constants.dart';
 import 'package:image/image.dart' as img;
 import 'package:shams/app/config/status.dart';
 import 'package:shams/app/core/common/widgets/internal_page.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/purchase_methods/view/getX/print_controller.dart';
 import 'package:shams/app/features/purchase_methods/view/widgets/build_print_widget.dart';
 import 'package:shams/app/features/setting/view/getX/setting_controller.dart';
@@ -29,6 +29,7 @@ class BluetoothPage extends StatelessWidget {
     required this.cardTitle,
     required this.footer,
     required this.isReported,
+    required this.cardId,
   });
   final List serialList;
   final List ussdCodes;
@@ -36,6 +37,7 @@ class BluetoothPage extends StatelessWidget {
   final String printDate;
   final String cardTitle;
   final String footer;
+  final String cardId;
   final bool isReported;
 
   // final GlobalKey _globalKey = GlobalKey();
@@ -43,11 +45,10 @@ class BluetoothPage extends StatelessWidget {
       Get.put(BluetoothController(), permanent: true);
   @override
   Widget build(BuildContext context) {
-
     print('printDate=======>$printDate');
     bluetoothController.printed.value = false;
     SettingController settingController = Get.put(SettingController());
-    final updateController = Get.find<UpdateController>();
+    final updateController = Get.find<HomeApiProvider>();
 
     List<ScreenshotController> cardPhotoScreenshotControllers =
         List.generate(serialList.length, (_) => ScreenshotController());
@@ -62,6 +63,8 @@ class BluetoothPage extends StatelessWidget {
         List.generate(serialList.length, (_) => ScreenshotController());
     List<ScreenshotController> pinCodeScreenshotControllers =
         List.generate(serialList.length, (_) => ScreenshotController());
+    List<ScreenshotController> barCodeScreenshotControllers =
+        List.generate(serialList.length, (_) => ScreenshotController());
 
     final savedPrinter = Constants.localStorage.read('printAddres');
     if (savedPrinter != null) {
@@ -71,13 +74,14 @@ class BluetoothPage extends StatelessWidget {
       );
     }
     Future<void> captureAndSavePng() async {
-      final user = updateController.userData.first;
+      final user = updateController.homeDataList.first;
       for (final serial in serialList) {
         List<int>? cardPhotoBytes;
         List<int>? headerBytes;
         List<int>? qrCodeBytes;
         List<int>? footerBytes;
         List<int>? pinCodeBytes;
+        List<int>? barCodeBytes;
         final int index = serialList.indexOf(serial);
         Uint8List? headerimageBytes =
             await headerScreenshotControllers[index].capture();
@@ -104,6 +108,13 @@ class BluetoothPage extends StatelessWidget {
           footerBytes = await processImageForPrinter(imageBytes);
         }
 
+        if (settingController.settings["printBarCode"] ?? false) {
+          Uint8List? imageBytes =
+              await barCodeScreenshotControllers[index].capture();
+          if (imageBytes == null) continue;
+          barCodeBytes = await processImageForPrinter(imageBytes);
+        }
+
         Uint8List? imageBytes =
             await pinCodeScreenshotControllers[index].capture();
         if (imageBytes == null) continue;
@@ -127,6 +138,7 @@ class BluetoothPage extends StatelessWidget {
         printText('Terminal ID : ${user.user?.id ?? ''}\n');
         printText('Time : $printDate\n');
         printText('Order Number : ${serial.id}\n');
+        printText('Expiry Time : ${serial.expiredDate ?? serial.code3}');
         if (cardPhotoBytes != null) {
           PrintBluetoothThermal.writeBytes(cardPhotoBytes);
         }
@@ -142,63 +154,11 @@ class BluetoothPage extends StatelessWidget {
         if (pinCodeBytes != null) {
           PrintBluetoothThermal.writeBytes(pinCodeBytes);
         }
-
-        // if (serial.code != null && serial.code!.isNotEmpty) {
-        //   if ((serial.code as String).length > 15) {
-        //     printText('\nPin Code : \n'
-        //             "\x1D\x21\x00" // کوچک کردن سایز فونت
-        //             "\x1B\x45\x01" // فعال کردن بولد
-        //             "${serial.code}"
-        //             "\x1B\x45\x00" // غیرفعال کردن بولد
-        //             "\x1D\x21\x00" // بازگشت به سایز فونت اصلی
-        //             "\x1B\x4D\x00\n") // بازگشت به فونت اصلی)
-        //         ;
-        //   } else {
-        //     printText('\nPin Code : \n'
-        //         "\x1B\x61\x00"
-        //         "\x1B\x4D\x01" // Select font B
-        //         "\x1B\x45\x01" // Activate bold
-        //         "\x1B\x45\x01\x1D\x21\x11${serial.code}\x1D\x21\x00\x1B\x45\x00"
-        //         "\x1B\x4D\x00\n");
-        //   }
-        // }
-        // if (serial.code1 != null && serial.code1!.isNotEmpty) {
-        //   final codesToPrint = [
-        //     serial.code1,
-        //     serial.code2,
-        //     serial.code3,
-        //     serial.code4
-        //   ];
-        //   if (codesToPrint.isNotEmpty) {
-        //     printText("\n"
-        //         "\x1B\x61\x00" // align left
-        //         "\x1B\x4D\x01" // Select font B
-        //         "\x1B\x45\x01" // Activate bold
-        //         "\x1B\x45\x01\x1D\x21\x11${serial.code1}\x1D\x21\x00\x1B\x45\x00"
-        //         "\x1B\x4D\x00" // Reset to font A
-        //         "\n\n"
-        //         "\x1B\x61\x00" // align left
-        //         "\x1B\x4D\x01" // Select font B
-        //         "\x1B\x45\x01" // Activate bold
-        //         "\x1B\x45\x01\x1D\x21\x11${serial.code2}\x1D\x21\x00\x1B\x45\x00"
-        //         "\x1B\x4D\x00" // Reset to font A
-        //         "\n\n"
-        //         "\x1B\x61\x00" // align left
-        //         "\x1B\x4D\x01" // Select font B
-        //         "\x1B\x45\x01" // Activate bold
-        //         "\x1B\x45\x01\x1D\x21\x11${serial.code3}\x1D\x21\x00\x1B\x45\x00"
-        //         "\x1B\x4D\x00" // Reset to font A
-        //         "\n\n"
-        //         "\x1B\x61\x00" // align left
-        //         "\x1B\x4D\x01" // Select font B
-        //         "\x1B\x45\x01" // Activate bold
-        //         "\x1B\x45\x01\x1D\x21\x11${serial.code4}\x1D\x21\x00\x1B\x45\x00"
-        //         "\x1B\x4D\x00 \n" // Reset to font A
-        //         );
-        //   }
-        // }
         if (qrCodeBytes != null) {
           PrintBluetoothThermal.writeBytes(qrCodeBytes);
+        }
+        if (barCodeBytes != null) {
+          PrintBluetoothThermal.writeBytes(barCodeBytes);
         }
         if (footerBytes != null) {
           PrintBluetoothThermal.writeBytes(footerBytes);
@@ -210,6 +170,7 @@ class BluetoothPage extends StatelessWidget {
     }
 
     return InternalPage(
+        disconnect: true,
         customWidget: Container(
           width: double.infinity,
           margin: const EdgeInsets.all(20),
@@ -262,7 +223,13 @@ class BluetoothPage extends StatelessWidget {
                                             footerScreenshotControllers[index],
                                         pinCodeScreenshotControllers:
                                             pinCodeScreenshotControllers[index],
+                                        barCodeScreenshotControllers:
+                                            barCodeScreenshotControllers[index],
                                         isReported: isReported,
+                                        cardId: cardId,
+                                        expiryTime:
+                                            serialList[index]?.expiredDate ??
+                                                serialList[index]?.code3,
                                       ),
                                     ),
                                   ),
@@ -347,24 +314,24 @@ class BluetoothPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const Gap(5),
-                        ZoomTapAnimation(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              bluetoothController.disconnectDevice();
-                            },
-                            label: const Text('قطع الاتصال'),
-                            icon: SvgPicture.asset(
-                              'assets/svgs/signal-stream-slash.svg',
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.onPrimary,
-                                BlendMode.srcIn,
-                              ),
-                              width: 20,
-                              height: 20,
-                            ),
-                          ),
-                        ),
+                        // const Gap(5),
+                        // ZoomTapAnimation(
+                        //   child: ElevatedButton.icon(
+                        //     onPressed: () {
+                        //       bluetoothController.disconnectDevice();
+                        //     },
+                        //     label: const Text('قطع الاتصال'),
+                        //     icon: SvgPicture.asset(
+                        //       'assets/svgs/signal-stream-slash.svg',
+                        //       colorFilter: ColorFilter.mode(
+                        //         Theme.of(context).colorScheme.onPrimary,
+                        //         BlendMode.srcIn,
+                        //       ),
+                        //       width: 20,
+                        //       height: 20,
+                        //     ),
+                        //   ),
+                        // ),
                         const Gap(5),
                         Text(
                             "تم الاتصال بـ : ${bluetoothController.deviceName.value}"),
@@ -485,14 +452,15 @@ class BluetoothPage extends StatelessWidget {
   }
 
   buildPrintString() async {
-    final updateController = Get.find<UpdateController>();
-    final user = updateController.userData.first;
+    final updateController = Get.find<HomeApiProvider>();
+    final user = updateController.homeDataList.first;
     String formatSerial(serial) {
       return [
         isReported ? '--------- 2 ---------\n' : '',
         'Terminal ID : ${user.user?.id ?? ''}',
         'Time : $printDate',
         'Order Number : ${serial.id}',
+        'Expiry Time : ${serial.expiredDate ?? serial.code3}',
         cardTitle,
         if (serial.serial != null &&
             (serial.serial is String) &&

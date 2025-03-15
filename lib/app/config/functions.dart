@@ -1,15 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shams/app/config/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 String? formatNumber(int? number) {
   if (number == null || number == 0) {
-    return null; // اگر مقدار null یا 0 بود، چیزی نمایش داده نمی‌شود
+    return null;
   }
   return number.toString().replaceAllMapped(
         RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
@@ -59,6 +57,3 @@ Future<String?> getId() async {
     return null;
   }
 }
-
-
-

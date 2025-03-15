@@ -3,6 +3,7 @@ import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/handle_logout.dart';
 import 'package:shams/app/config/status.dart';
 import 'package:dio/dio.dart';
+import 'package:shams/app/core/common/widgets/exit_dialog.dart';
 import 'package:shams/app/features/user_operations/data/models/operation_model.dart';
 
 class OperationApiProvider extends GetxController {
@@ -38,9 +39,13 @@ class OperationApiProvider extends GetxController {
       } else if (response.statusCode == 401) {
         handleLogout(response.data['error']['message']);
       } else {
-        rxRequestStatus.value = Status.error;
-        Get.closeAllSnackbars();
-        Get.snackbar('خطأ', 'فشل في جلب البيانات.');
+        if ((response.data?['logged_in'] ?? 1) == 0) {
+          exitDialog(response.data['errors'][0]);
+        } else {
+          rxRequestStatus.value = Status.error;
+          Get.closeAllSnackbars();
+          Get.snackbar('خطأ', 'فشل في جلب البيانات.');
+        }
       }
     } catch (e) {
       print(e);

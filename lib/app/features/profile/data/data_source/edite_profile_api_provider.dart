@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/handle_logout.dart';
 import 'package:shams/app/config/status.dart';
+import 'package:shams/app/core/common/widgets/exit_dialog.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 
 class EditeProfileApiProvider extends GetxController {
   final rxRequestStatus = Status.initial.obs;
@@ -57,13 +59,18 @@ class EditeProfileApiProvider extends GetxController {
         Get.closeAllSnackbars();
         Get.snackbar('تنبيه', 'تم حفظ المعلومات');
         rxRequestStatus.value = Status.completed;
-        final UpdateController updateController = Get.find<UpdateController>();
-        await updateController.updateInformation();
+        final HomeApiProvider updateController = Get.find<HomeApiProvider>();
+        await updateController.fetchHomeData();
       } else if (response.statusCode == 401) {
         handleLogout(response.data['error']['message']);
       } else {
-        errorMessage.value = 'لم يتم حفظ المعلومات بشكل صحيح';
-        rxRequestStatus.value = Status.error;
+        if ((response.data?['logged_in'] ?? 1) == 0) {
+          rxRequestStatus.value = Status.error;
+          exitDialog(response.data['errors'][0]);
+        } else {
+          errorMessage.value = 'لم يتم حفظ المعلومات بشكل صحيح';
+          rxRequestStatus.value = Status.error;
+        }
       }
     } catch (e) {
       errorMessage.value = 'لم يتم حفظ المعلومات بشكل صحيح';

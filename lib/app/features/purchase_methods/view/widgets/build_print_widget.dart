@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:shams/app/config/functions.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/setting/view/getX/setting_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:barcode/barcode.dart';
 
 class PrintWidget extends StatelessWidget {
   const PrintWidget({
@@ -26,13 +27,17 @@ class PrintWidget extends StatelessWidget {
     required this.ussd,
     required this.footerText,
     required this.isReported,
+    required this.expiryTime,
     required this.cardPhotoScreenshotControllers,
     required this.headerScreenshotControllers,
     required this.qrcodeScreenshotControllers,
     required this.footerScreenshotControllers,
     required this.pinCodeScreenshotControllers,
+    required this.barCodeScreenshotControllers,
+    required this.cardId,
   });
   final String printDate;
+  final String cardId;
   final String serialId;
   final String cardTitle;
   final String serial;
@@ -45,16 +50,18 @@ class PrintWidget extends StatelessWidget {
   final String code3;
   final String code4;
   final bool isReported;
+  final String expiryTime;
   final ScreenshotController cardPhotoScreenshotControllers;
   final ScreenshotController headerScreenshotControllers;
   final ScreenshotController qrcodeScreenshotControllers;
   final ScreenshotController footerScreenshotControllers;
   final ScreenshotController pinCodeScreenshotControllers;
+  final ScreenshotController barCodeScreenshotControllers;
   @override
   Widget build(BuildContext context) {
     print('printDate=======>$printDate');
-    final updateController = Get.find<UpdateController>();
-    final user = updateController.userData.first;
+    final updateController = Get.find<HomeApiProvider>();
+    final user = updateController.homeDataList.first;
     final settingController = Get.find<SettingController>();
 
     const double mainPadding = 3.0;
@@ -62,6 +69,14 @@ class PrintWidget extends StatelessWidget {
         fontWeight: FontWeight.w700, fontSize: 18, color: Colors.black);
     const TextStyle boldTextStyle10 = TextStyle(
         fontWeight: FontWeight.w700, fontSize: 20, color: Colors.black);
+
+    print('cardTitle ===>$cardTitle');
+    final Barcode barcode = Barcode.code93();
+
+    // Generate the barcode as SVG
+    final String svgBarcode = barcode.toSvg(
+      '00964$cardId',
+    );
     return Container(
       padding: const EdgeInsets.all(mainPadding),
       decoration: BoxDecoration(
@@ -77,21 +92,17 @@ class PrintWidget extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
-                  ColorFiltered(
-                    colorFilter:
-                        const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
+                  CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    height: 70,
+                    width: 60,
+                    imageUrl: user.user?.agent?.appPhotoUrl ?? '',
+                    placeholder: (context, url) => const CustomLoading(),
+                    errorWidget: (context, url, error) => Image.asset(
+                      'assets/images/not.jpg',
+                      fit: BoxFit.fill,
                       height: 70,
                       width: 60,
-                      imageUrl: user.user?.agent?.appPhotoUrl ?? '',
-                      placeholder: (context, url) => const CustomLoading(),
-                      errorWidget: (context, url, error) => Image.asset(
-                        'assets/images/not.jpg',
-                        fit: BoxFit.fill,
-                        height: 70,
-                        width: 60,
-                      ),
                     ),
                   ),
                   Text(user.user?.agent?.name ?? '', style: boldTextStyle8),
@@ -107,6 +118,7 @@ class PrintWidget extends StatelessWidget {
               'Terminal ID : ${user.user?.id ?? ''}', boldTextStyle8),
           _buildAlignText('Time : $printDate', boldTextStyle8),
           _buildAlignText('Order Number :  $serialId', boldTextStyle8),
+          _buildAlignText('Expiry Time :  $expiryTime', boldTextStyle8),
           const Gap(5),
           Visibility(
             visible: settingController.settings["printCardImage"] ?? false,
@@ -254,6 +266,18 @@ class PrintWidget extends StatelessWidget {
                   ),
           ),
           const Gap(4),
+          Visibility(
+            visible: settingController.settings["printBarCode"] ?? false,
+            child: Screenshot(
+              controller: barCodeScreenshotControllers,
+              child: Container(
+                color: Colors.white,
+                child: SvgPicture.string(
+                  svgBarcode,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -285,5 +309,59 @@ class PrintWidget extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Text(text, style: style),
     );
+  }
+
+  // Function to modify the spacing in the SVG
+  // Function to modify the SVG and add spacing between lines
+  String modifyLineSpacing(String svg) {
+    // Match all <rect> elements (representing barcode lines)
+    final RegExp rectRegex = RegExp(r'<rect([^>]*)\/>');
+
+    // List to hold the new rect elements
+    final List<String> modifiedRects = [];
+
+    // Find and process all rects
+    svg.split('\n').forEach((line) {
+      if (rectRegex.hasMatch(line)) {
+        // Extract the rect element
+        final match = rectRegex.firstMatch(line);
+        if (match != null) {
+          // Parse x, y, width, and height
+          String rect = match.group(0)!;
+          final RegExp xRegex = RegExp(r'x="([\d.]+)"');
+          final RegExp yRegex = RegExp(r'y="([\d.]+)"');
+          final RegExp widthRegex = RegExp(r'width="([\d.]+)"');
+          final RegExp heightRegex = RegExp(r'height="([\d.]+)"');
+
+          // Extract current values
+          double x = double.parse(xRegex.firstMatch(rect)?.group(1) ?? '0');
+          double y = double.parse(yRegex.firstMatch(rect)?.group(1) ?? '0');
+          double width =
+              double.parse(widthRegex.firstMatch(rect)?.group(1) ?? '0');
+          double height =
+              double.parse(heightRegex.firstMatch(rect)?.group(1) ?? '0');
+
+          // Increase spacing by modifying the height or position
+          height *= 0.8; // Reduce height for spacing
+          y += 1.5; // Increase y position to add spacing
+
+          // Replace values in the rect element
+          rect = rect.replaceAll(xRegex, 'x="${x.toStringAsFixed(2)}"');
+          rect = rect.replaceAll(yRegex, 'y="${y.toStringAsFixed(2)}"');
+          rect = rect.replaceAll(
+              widthRegex, 'width="${width.toStringAsFixed(2)}"');
+          rect = rect.replaceAll(
+              heightRegex, 'height="${height.toStringAsFixed(2)}"');
+
+          modifiedRects.add(rect);
+        }
+      } else {
+        // Add non-rect lines without changes
+        modifiedRects.add(line);
+      }
+    });
+
+    // Combine the modified SVG lines
+    return modifiedRects.join('\n');
   }
 }

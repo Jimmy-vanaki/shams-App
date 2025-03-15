@@ -14,6 +14,7 @@ import 'package:shams/app/config/functions.dart';
 import 'package:shams/app/config/status.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/home/view/getX/purchase_methods_controller.dart';
 import 'package:shams/app/features/purchase_methods/data/models/purchase_model.dart';
 import 'package:shams/app/features/purchase_methods/repositories/methods_manager.dart';
@@ -32,7 +33,7 @@ class USerReportingList extends StatelessWidget {
     RePrintApiProvider rePrintApiProvider = Get.find<RePrintApiProvider>();
     final BluetoothController bluetoothController =
         Get.put(BluetoothController(), permanent: true);
-    final updateController = Get.find<UpdateController>();
+    final updateController = Get.find<HomeApiProvider>();
     final reportValueController = Get.find<ReportValueController>();
     var serials = reportDataList;
     final totalAmount = serials.first.serials
@@ -79,8 +80,8 @@ class USerReportingList extends StatelessWidget {
                           }
                           List<int>? headerBytes;
                           List<int>? headerBytesli;
-                          final updateController = Get.find<UpdateController>();
-                          final user = updateController.userData.first;
+                          final updateController = Get.find<HomeApiProvider>();
+                          final user = updateController.homeDataList.first;
                           Uint8List? headerimageBytes =
                               await headerScreenshotControllers.capture();
 
@@ -214,13 +215,13 @@ class USerReportingList extends StatelessWidget {
                               ? OutlinedButton(
                                   onPressed: () {
                                     if (serials.first.serials[index].rePrint <=
-                                        (updateController.userData.first.user!
-                                                .agent!.maxReprints ??
+                                        (updateController.homeDataList.first
+                                                .user!.agent!.maxReprints ??
                                             1)) {
                                       if (purchaseMethodsController
                                               .isButtonDisabled.value <=
-                                          (updateController.userData.first.user!
-                                                  .agent!.maxReprints ??
+                                          (updateController.homeDataList.first
+                                                  .user!.agent!.maxReprints ??
                                               1)) {
                                         rePrintApiProvider
                                             .fetchRePrintData(
@@ -287,6 +288,9 @@ class USerReportingList extends StatelessWidget {
                                                         .cardDetails2!
                                                         .cardFooter!,
                                                 isReported: true,
+                                                cardId: serials
+                                                    .first.serials[index].cardId
+                                                    .toString(),
                                               );
                                             }
                                           },

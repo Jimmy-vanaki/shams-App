@@ -9,6 +9,7 @@ class SettingController extends GetxController {
     "printQrcode": false,
     "printCardImage": false,
     "printInformation": false,
+    "printBarCode": false,
   }.obs;
 
   @override

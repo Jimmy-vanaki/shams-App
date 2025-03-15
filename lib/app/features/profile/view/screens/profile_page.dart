@@ -7,6 +7,7 @@ import 'package:shams/app/core/common/widgets/internal_page.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/routes/routes.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/profile/view/widgets/user_information.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
@@ -14,7 +15,7 @@ class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
   @override
   Widget build(BuildContext context) {
-    final updateController = Get.find<UpdateController>();
+    final updateController = Get.find<HomeApiProvider>();
     return InternalPage(
       title: 'الملف الشخصي',
       customWidget: Stack(
@@ -39,7 +40,7 @@ class ProfilePage extends StatelessWidget {
                 Obx(
                   () {
                     return Text(
-                      updateController.userData.first.user?.name ?? '',
+                      updateController.homeDataList.first.user?.name ?? '',
                       style: TextStyle(
                         fontSize: 20,
                         color: Theme.of(context).colorScheme.onPrimary,
@@ -67,7 +68,7 @@ class ProfilePage extends StatelessWidget {
                         height: 160,
                         width: 160,
                         imageUrl:
-                            updateController.userData.first.user?.photoUrl ??
+                            updateController.homeDataList.first.user?.photoUrl ??
                                 '',
                         placeholder: (context, url) => const CustomLoading(),
                         errorWidget: (context, url, error) => Image.asset(

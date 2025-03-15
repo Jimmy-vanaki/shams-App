@@ -4,7 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/error_widget.dart';
 import 'package:shams/app/core/common/constants/get_version.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/page_view/view/getX/scaffold_controller.dart';
 
 Future<void> init() async {
@@ -13,15 +13,13 @@ Future<void> init() async {
   // Initialize the custom error widget
   CustomErrorWidget.initialize();
   await GetStorage.init();
-
   Constants.userToken = Constants.localStorage.read('userToken') ?? '';
+  Get.put(HomeApiProvider());
   print('Token: ${Constants.userToken}');
-
-  final UpdateController updateController = Get.put(UpdateController());
+  // homeApiProvider.fetchHomeData();
   if (Constants.userToken.isNotEmpty) {
     Constants.isLoggedIn = true;
     // updateController.isUpdating.value = true;
-    await updateController.updateInformation();
   }
   await [
     Permission.bluetooth,

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -19,11 +20,11 @@ class AboutPage extends StatelessWidget {
             Constants.isLoggedIn
                 ? Obx(
                     () {
-                      final updateController = Get.find<UpdateController>();
-                      if (updateController.userData.isEmpty) {
+                      final updateController = Get.find<HomeApiProvider>();
+                      if (updateController.homeDataList.isEmpty) {
                         return const SizedBox.shrink();
                       }
-                      final user = updateController.userData.first;
+                      final user = updateController.homeDataList.first;
                       return LayoutBuilder(
                         builder: (context, constraints) {
                           // Adjust the image height to a maximum and allow width to adapt dynamically
@@ -58,25 +59,25 @@ class AboutPage extends StatelessWidget {
             const Gap(20),
             Obx(
               () {
-                final updateController = Get.find<UpdateController>();
-                if (updateController.userData.isEmpty) {
+                final updateController = Get.find<HomeApiProvider>();
+                if (updateController.homeDataList.isEmpty) {
                   return const SizedBox.shrink();
                 }
 
                 return Text(
-                  (updateController.userData.first.user?.agent?.description !=
+                  (updateController.homeDataList.first.user?.agent
+                                  ?.description !=
                               null &&
-                          updateController.userData.first.user!.agent!
+                          updateController.homeDataList.first.user!.agent!
                               .description!.isNotEmpty)
                       ? updateController
-                          .userData.first.user!.agent!.description!
-                      : '''- نظام متكامل لبيع وتسويق البطاقات الالكترونية المحلية والعالمية متخصصة في مجال بطاقات تعبئة الأرصدة لمختلف الشركات المحلية والعالمية وأجهزة POS بمختلف أنواعها.
-                          - لا يمكن الدخول للتطبيق لأكثر من جهاز إلا بعد تسجيل الخروج، مراعاة لمتطلبات الحماية والأمان.
-                          - واجهة سهلة وعملية، تظهر الرصيد الكلي للمستخدم ، مع امكانية الشراء ، وعرض التقارير، والاعدادات ، والاطلاع على الاشعارات وامكانية تعديل كلمة المرور.
-                          - عند اختيار فئة معينة وتحديد العدد المطلوب، بامكانك طباعة معلومات الكارت ، او مشاركته عبر برامج التواصل الاجتماعي، او ارساله كرسالة نصية (SMS).
-                          - بامكان المستخدم الاطلاع على التقارير بشكل سهل وعملي، بتحديد كل او بعض الفئات ، وتحديد الفئات الفرعية ، واختيار التاريخ المطلوب، لتظهر النتائج. مع امكانية تكرار عملية الطباعة او المشاركة او ارسال الرسالة النصية، او طباعة التقرير التفصيلي مع بيان التاريخ والوقت والرقم التسلسلي.
-                          - بامكان المستخدم تحديد نوع الطابعة وحفظها حتى لا يتم السؤال في كل عملية طباعة، وكذلك تفعيل او عدم تفعيل عرض كود الاستجابة السريع (QR code)، وتحديث بيانات المستخدم.
-                          - يتوفر نسختين من تطبيق (الشمس) للاجهزة العاملة بنظام اندرويد سواء للموبايل أو الاجهزة اللوحية، وكذلك نسخة iOS للايفون والايباد.
+                          .homeDataList.first.user!.agent!.description!
+                      : '''
+شركة الشمس
+شركة متخصصة في مجال أنظمة بيع وتوزيع البطاقات الرقمية والخدمات الالكترونية، تتميز بطاقم اداري متخصص وذو خبرة واسعة في هذا المجال لتصبح بذلك واحدة من أفضل الشركات في المنطقة.
+
+تطبيق الشمس
+نظام متكامل لبيع وتسويق البطاقات الالكترونية المحلية والعالمية متخصصة في مجال بطاقات تعبئة الأرصدة لمختلف الشركات المحلية و العالمية وأجهزة POS بمختلف أنواعها.
                           ''',
                   textAlign: TextAlign.justify,
                   style: const TextStyle(

@@ -133,7 +133,9 @@ class InternetPackagesPage extends StatelessWidget {
                                               .companyList[
                                           internetPackagesController
                                               .companySelected.value]['title'],
-                                      categoryId: '',
+                                      categoryId: internetPackagesController
+                                          .packageList[index]['id']
+                                          .toString(),
                                       type: 'bundle',
                                     );
                                   },

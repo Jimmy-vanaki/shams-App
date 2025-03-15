@@ -18,6 +18,8 @@ void main() async {
   await init();
   await checkGooglePlayServices();
   runApp(const MyApp());
+
+
   FlutterNativeSplash.remove();
 }
 
@@ -30,8 +32,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //connectivity controller
     Get.put(ConnectivityController());
+
     final bool darkMode =
         Constants.localStorage.read('settings')?['darkMode'] ?? false;
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
@@ -61,12 +65,17 @@ Future<void> checkGooglePlayServices() async {
 
   if (availability != GooglePlayServicesAvailability.success) {
     debugPrint('Google Play Services not available: $availability');
-    // در صورت عدم وجود Google Play Services به کاربر اطلاع دهید
+
+    // در صورت عدم وجود Google Play ces به کاربر اطلاع دهید
+
     showGooglePlayServicesError(availability);
   } else {
     debugPrint('Google Play Services is available.');
+
     await Firebase.initializeApp();
+
     FirebaseMessaging.onBackgroundMessage(handleFirebaseBackgroundMessage);
+
     await FirebaseNotificationService().initializeNotifications();
   }
 }

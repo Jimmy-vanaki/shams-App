@@ -6,7 +6,9 @@ import 'package:get/get.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/handle_logout.dart';
 import 'package:shams/app/config/status.dart';
+import 'package:shams/app/core/common/widgets/exit_dialog.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 
 class ServiceApiProvider extends GetxController {
   final RxString errorMessage = ''.obs;
@@ -18,8 +20,8 @@ class ServiceApiProvider extends GetxController {
   ));
 
   final rxRequestStatus = Status.initial.obs;
-  final UpdateController updateController = Get.find<UpdateController>();
-  
+  final HomeApiProvider updateController = Get.find<HomeApiProvider>();
+
   Future fetchTransaction({
     required String phone,
     required String categoryId,
@@ -64,10 +66,15 @@ class ServiceApiProvider extends GetxController {
       } else if (response.statusCode == 401) {
         handleLogout(response.data['error']['message']);
       } else {
-        rxRequestStatus.value = Status.error;
-        errorMessage.value = response.data['message'];
-        Get.closeAllSnackbars();
-        Get.snackbar('خطأ', response.data['message']);
+        if ((response.data?['logged_in'] ?? 1) == 0) {
+          rxRequestStatus.value = Status.completed;
+          exitDialog(response.data['errors'][0]);
+        } else {
+          rxRequestStatus.value = Status.error;
+          errorMessage.value = response.data['message'];
+          Get.closeAllSnackbars();
+          Get.snackbar('خطأ', response.data['message']);
+        }
       }
     } catch (e) {
       rxRequestStatus.value = Status.error;

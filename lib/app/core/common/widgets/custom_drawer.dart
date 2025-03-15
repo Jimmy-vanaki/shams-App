@@ -12,6 +12,7 @@ import 'package:shams/app/core/data/data_source/logout_api_provider.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/routes/routes.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/page_view/view/getX/navigation_controller.dart';
 import 'package:shams/app/features/text_content/view/screen/text_content.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -88,11 +89,11 @@ class CustomDrawer extends StatelessWidget {
         "title": 'الدعم الفني',
         "icon": 'user-headset',
         "onTap": () {
-          final updateController = Get.find<UpdateController>();
-          if (updateController.userData.isEmpty) {
+          final updateController = Get.find<HomeApiProvider>();
+          if (updateController.homeDataList.isEmpty) {
             return const SizedBox.shrink();
           }
-          final user = updateController.userData.first;
+          final user = updateController.homeDataList.first;
           Get.toNamed(Routes.textContent,
               arguments: TextContent(
                 title: 'الدعم الفني',
@@ -176,11 +177,11 @@ class CustomDrawer extends StatelessWidget {
           Constants.isLoggedIn
               ? Obx(
                   () {
-                    final updateController = Get.find<UpdateController>();
-                    if (updateController.userData.isEmpty) {
+                    final updateController = Get.find<HomeApiProvider>();
+                    if (updateController.homeDataList.isEmpty) {
                       return const SizedBox.shrink();
                     }
-                    final user = updateController.userData.first;
+                    final user = updateController.homeDataList.first;
                     return UserAccountsDrawerHeader(
                       accountName: Text(
                         user.user?.name ?? '',

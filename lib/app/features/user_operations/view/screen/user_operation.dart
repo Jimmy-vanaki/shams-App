@@ -76,25 +76,37 @@ class UserOperation extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     buildRowWithGap(
-                                      "النوع : ",
+                                      "الاجراء : ",
                                       getOperationType(operation),
                                     ),
-                                    buildRowWithGap("العدد : ",
-                                        operation.serialCount?.toString()),
-                                    buildRowWithGap(
-                                      "المبلغ : ",
-                                      formatNumber(operation.deposit),
-                                    ),
-                                    buildRowWithGap(
-                                        "رصيدك : ",
-                                        formatNumber(operation.inventory) ??
-                                            ''),
+                                    if (operation.serialCount != null &&
+                                        operation.serialCount != 0)
+                                      buildRowWithGap("العدد : ",
+                                          operation.serialCount.toString()),
                                     buildRowWithGap(
                                         "الفئة : ",
                                         operation.categoryTitle
                                                 ?.toString()
                                                 .split('.')
                                                 .last ??
+                                            ''),
+                                    buildRowWithGap(
+                                      "المبلغ : ",
+                                      formatNumber(operation.deposit),
+                                    ),
+                                    buildRowWithGap(
+                                        "رصيدك السابق : ",
+                                        formatNumber(operation.inventory) ??
+                                            ''),
+                                    buildRowWithGap(
+                                        "رصيدك الحالي:",
+                                        formatNumber(operation.inventory! -
+                                                (operation.userPrice ??
+                                                    operation.agentPrice ??
+                                                    operation
+                                                        .parentAgentPrice ??
+                                                    operation.categoryPrice ??
+                                                    0)) ??
                                             ''),
                                     const Gap(10),
                                     Align(
@@ -157,13 +169,13 @@ class UserOperation extends StatelessWidget {
   }
 
   String getOperationType(Datum operation) {
-    if (operation.deposit != null) {
-      return "تحويل رصيد";
-    }
     if (operation.deviceToken != null && operation.deviceToken!.isNotEmpty) {
       return "تسجيل دخول";
     }
-    if (operation.serialCount != null) {
+    if (operation.deposit != null && operation.deposit! > 0) {
+      return "تحويل رصيد";
+    }
+    if (operation.serialCount != null && operation.serialCount! > 0) {
       return "طباعة";
     }
     return "غير محدد";

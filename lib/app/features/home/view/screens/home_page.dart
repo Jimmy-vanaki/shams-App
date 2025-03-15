@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart'; // Import the package
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shams/app/config/constants.dart';
 import 'package:shams/app/config/status.dart';
 import 'package:shams/app/core/common/widgets/offline_widget.dart';
@@ -31,7 +31,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final HomeApiProvider homeApiProvider = Get.find();
+    final HomeApiProvider homeApiProvider = Get.put(HomeApiProvider());
+    homeApiProvider.fetchHomeData();
     final ProductsApiProvider productsApiProvider = Get.find(tag: 'random');
     final CompanySliderController companySliderController =
         Get.put(CompanySliderController());

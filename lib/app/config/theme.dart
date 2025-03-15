@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shams/app/config/functions.dart';
-import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/extensions/success_color_theme.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 
 final updateController =
-    Get.isRegistered<UpdateController>() ? Get.find<UpdateController>() : null;
+    Get.isRegistered<HomeApiProvider>() ? Get.find<HomeApiProvider>() : null;
 
-final user = updateController?.userData.isNotEmpty == true
-    ? updateController!.userData.first
+final user = updateController?.homeDataList.isNotEmpty == true
+    ? updateController!.homeDataList.first
     : null;
 
 final String primaryHex = (user?.user?.agent?.primaryColor?.isNotEmpty == true)

@@ -8,6 +8,7 @@ import 'package:shams/app/config/status.dart';
 import 'package:shams/app/core/common/widgets/internal_page.dart';
 import 'package:shams/app/core/data/data_source/update_info.dart';
 import 'package:shams/app/core/utils/custom_loading.dart';
+import 'package:shams/app/features/home/data/data_source/home_api_provider.dart';
 import 'package:shams/app/features/profile/data/data_source/edite_profile_api_provider.dart';
 import 'package:shams/app/features/profile/view/getX/edit_profile_page_controller.dart';
 import 'package:shams/app/features/profile/view/getX/user_location_controller.dart';
@@ -21,7 +22,7 @@ class EditProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.lazyPut(() => EditProfilePageController());
     Get.lazyPut(() => EditeProfileApiProvider());
-    final updateController = Get.find<UpdateController>();
+    final updateController = Get.find<HomeApiProvider>();
     final editProfilePageController = Get.find<EditProfilePageController>();
     final editeProfileApiProvider = Get.find<EditeProfileApiProvider>();
     final LocationController locationController = Get.put(LocationController());
@@ -280,7 +281,7 @@ class EditProfilePage extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  updateController.userData.first.user?.name ?? '',
+                  updateController.homeDataList.first.user?.name ?? '',
                   style: TextStyle(
                     fontSize: 20,
                     color: Theme.of(context).colorScheme.onPrimary,
